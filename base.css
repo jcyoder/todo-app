@@ -22,6 +22,7 @@ button {
 body {
 	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	line-height: 1.4em;
+    background: #eaeaea;
 	/*background: #eaeaea url('bg.png'); */
 	color: #4d4d4d;
 	width: 550px;
@@ -233,7 +234,8 @@ label[for='toggle-all'] {
 }
 
 #todo-list li .toggle:checked:after {
-	color: #85ada7;
+    color: green;
+	/*color: #85ada7;*/
 	text-shadow: 0 1px 0 #669991;
 	bottom: 1px;
 	position: relative;

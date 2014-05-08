@@ -9,19 +9,20 @@ $(document).ready(function () {
                 // get the entry
                 var listentry = this.value;
                 console.log(listentry);
+                
                 //Add new entry to the list
                 //store it in local storage
                 //display the chevron toggle button
                 //display the checkmark
                 //display the 'X'
                 //if not already shown, display the footer info  
-            } 
+            }
             
         });
         
         $('#todo-list li').dblclick(function () {
             //if double click on the list item then can edit it
-            console.log("Double click event"); 
+            console.log("Double click event");
         });
         
         $('#todo-list li').keyup(function (event) {
@@ -31,20 +32,91 @@ $(document).ready(function () {
             }
         });
        
-        $('.toggle').click(function ()  {
+        $('.toggle').click(function () {
             console.log("Clicked on a checkmark");
             //click on a checkmark
             
         });
         
-        $('#toggle-all').click( function ()  {
+        $('#toggle-all').click(function () {
             //click on the chevron
             console.log("clicked on the chevron");
         });
         
+        $('.destroy').click(function () {
+           //clicked on the 'X' button
+            console.log("clicked to delete to do item");
+        });
         
+        
+        $('.selected').click(function () {
+            console.log("clicked on All link in footer");
+            
+        });
+        
+        $('.active').click(function () {
+            console.log("clicked on Active link in footer");
+            
+        });
+        
+        $('.completed').click(function () {
+            console.log("clicked on Completed link in footer");
+            
+        });
         
     }
     
+    var util = {
+		uuid: function () {
+			/*jshint bitwise:false */
+			var i, random;
+			var uuid = '';
+
+			for (i = 0; i < 32; i++) {
+				random = Math.random() * 16 | 0;
+				if (i === 8 || i === 12 || i === 16 || i === 20) {
+					uuid += '-';
+				}
+				uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
+			}
+
+			return uuid;
+		},
+		pluralize: function (count, word) {
+			return count === 1 ? word : word + 's';
+		},
+		store: function (namespace, data) {
+			if (arguments.length > 1) {
+				return localStorage.setItem(namespace, JSON.stringify(data));
+			} else {
+				var store = localStorage.getItem(namespace);
+				return (store && JSON.parse(store)) || [];
+			}
+		}
+	};
+    
+    var listfunctions = {
+        
+        addtoList: function (todoitem) {
+            var dataUUID = util.uuid();
+            var doneYet = false;
+            
+            
+        },
+        
+        completedListItem: function () {
+            
+            
+        },
+        
+        deleteListItem: function () {
+            
+            
+        }
+        
+        
+        
+    };
+
     setListeners();
 });
