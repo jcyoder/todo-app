@@ -556,3 +556,7 @@ hr {
 		margin: 130px auto 40px auto;
 	}
 }
+
+.template {
+    display: none;   
+}

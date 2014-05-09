@@ -6,16 +6,9 @@ $(document).ready(function () {
             //13 is the enter key
             if (event.which === 13) {
                 console.log("enter key was pressed");
-                // get the entry
                 var listentry = this.value;
                 console.log(listentry);
-                
-                //Add new entry to the list
-                //store it in local storage
-                //display the chevron toggle button
-                //display the checkmark
-                //display the 'X'
-                //if not already shown, display the footer info  
+                listfunctions.addtoList(listentry);
             }
             
         });
@@ -95,13 +88,14 @@ $(document).ready(function () {
 		}
 	};
     
+    
     var listfunctions = {
         
         addtoList: function (todoitem) {
             var dataUUID = util.uuid();
-            var doneYet = false;
-            
-            
+            var newlist = $('.template li').clone();
+            newlist.appendTo('#todo-list');
+            $('#todo-list li:last-child .view label').text(todoitem);
         },
         
         completedListItem: function () {
