@@ -39,6 +39,8 @@ $(document).ready(function () {
         $('.destroy').click(function () {
            //clicked on the 'X' button
             console.log("clicked to delete to do item");
+            var listitem = $(this).parent().parent();
+            listfunctions.deleteListItem(listitem);
         });
         
         
@@ -93,20 +95,24 @@ $(document).ready(function () {
         
         addtoList: function (todoitem) {
             var dataUUID = util.uuid();
-            var newlist = $('.template li').clone();
-            newlist.appendTo('#todo-list');
+            $('.template li').clone().appendTo('#todo-list');
             $('#todo-list li:last-child .view label').text(todoitem);
+          var letmesee =  $('#todo-list li:last-child').attr('data-id', dataUUID);
+            $('#new-todo').val('');
+        },
+        
+        deleteListItem: function (listitem) {
+            var idnum = listitem.attr('data-id');
+            listitem.remove();
+            // add code to remove from local storage too
         },
         
         completedListItem: function () {
             
             
-        },
-        
-        deleteListItem: function () {
-            
-            
         }
+        
+        
         
         
         
