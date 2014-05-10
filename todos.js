@@ -46,6 +46,14 @@ $(document).ready(function () {
             console.log("clicked on the chevron");
             if(this.checked === true) {
                 console.log("chevron is checked");
+                listfunctions.completedAll(true);
+            }
+            else {
+                console.log("chevron is un-checked");
+                listfunctions.completedAll(false); 
+            }
+                
+                /*    
                 $('#todo-list li').each( function () {
                     $(this).find('label').css('text-decoration', 'line-through');
                     console.log("crossing off: " + $(this).find('label').text());
@@ -61,7 +69,7 @@ $(document).ready(function () {
                     $(this).find('.toggle').click();
                 });
             }
-            
+            */
             
         });
         
@@ -137,15 +145,15 @@ $(document).ready(function () {
         },
         
         completedListItem: function (labelitem, checked) {
-               if (checked === true) {
-                   labelitem.css('text-decoration', 'line-through');
-               } else {
-                   labelitem.css('text-decoration', 'none');
-               }
+           if (checked === true) {
+               labelitem.css('text-decoration', 'line-through');
+           } else {
+               labelitem.css('text-decoration', 'none');
+           }
         },
         
         editListItem: function(event) {
-            if(event.target.nodeName == 'LABEL') {
+            if (event.target.nodeName === 'LABEL') {
                 console.log('label');
                 var inputsib = $(event.target).siblings('input');
                 //save the to do item out and hide the label
@@ -164,6 +172,24 @@ $(document).ready(function () {
                // $('par .toggle').after(test);
                 
                 
+            }
+        },
+        
+        completedAll: function(checked) {
+            if(checked === true) {
+                 $('#todo-list li').each( function () {
+                    $(this).find('label').css('text-decoration', 'line-through');
+                    console.log("crossing off: " + $(this).find('label').text());
+                    $(this).find('.toggle').click();
+                    
+                    
+                });
+            } else {
+                $('#todo-list li').each( function () {
+                    $(this).find('label').css('text-decoration', 'none');
+                    console.log("Un-crossing off: " + $(this).find('label').text());
+                    $(this).find('.toggle').click();
+                });
             }
         }
         
