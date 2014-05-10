@@ -27,6 +27,14 @@ $(document).ready(function () {
        
         $('.toggle').click(function () {
             console.log("Clicked on a checkmark");
+            var labelitem = $(this).siblings('label'); 
+            if(this.checked) {
+                listfunctions.completedListItem(labelitem, true);   
+            }
+            else {
+                console.log("check mark is not checked");
+                listfunctions.completedListItem(labelitem, false);   
+            }  
             //click on a checkmark
             
         });
@@ -97,7 +105,7 @@ $(document).ready(function () {
             var dataUUID = util.uuid();
             $('.template li').clone().appendTo('#todo-list');
             $('#todo-list li:last-child .view label').text(todoitem);
-          var letmesee =  $('#todo-list li:last-child').attr('data-id', dataUUID);
+            $('#todo-list li:last-child').attr('data-id', dataUUID);
             $('#new-todo').val('');
         },
         
@@ -107,9 +115,12 @@ $(document).ready(function () {
             // add code to remove from local storage too
         },
         
-        completedListItem: function () {
-            
-            
+        completedListItem: function (labelitem, checked) {
+           if (checked === true) {
+               labelitem.css('text-decoration', 'line-through');
+           } else {
+               labelitem.css('text-decoration', 'none');
+           }
         }
         
         
