@@ -16,6 +16,7 @@ $(document).ready(function () {
         $('#todo-list li').dblclick(function () {
             //if double click on the list item then can edit it
             console.log("Double click event");
+            $(this).children('label').hide();
         });
         
         $('#todo-list li').keyup(function (event) {
@@ -116,11 +117,11 @@ $(document).ready(function () {
         },
         
         completedListItem: function (labelitem, checked) {
-           if (checked === true) {
-               labelitem.css('text-decoration', 'line-through');
-           } else {
-               labelitem.css('text-decoration', 'none');
-           }
+               if (checked === true) {
+                   labelitem.css('text-decoration', 'line-through');
+               } else {
+                   labelitem.css('text-decoration', 'none');
+               }
         }
         
         
