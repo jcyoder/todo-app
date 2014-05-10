@@ -52,25 +52,6 @@ $(document).ready(function () {
                 console.log("chevron is un-checked");
                 listfunctions.completedAll(false); 
             }
-                
-                /*    
-                $('#todo-list li').each( function () {
-                    $(this).find('label').css('text-decoration', 'line-through');
-                    console.log("crossing off: " + $(this).find('label').text());
-                    $(this).find('.toggle').click();
-                    
-                    
-                });
-            } else {
-                console.log("chevron is un-checked");
-                $('#todo-list li').each( function () {
-                    $(this).find('label').css('text-decoration', 'none');
-                    console.log("Un-crossing off: " + $(this).find('label').text());
-                    $(this).find('.toggle').click();
-                });
-            }
-            */
-            
         });
         
         $('.destroy').click(function () {
