@@ -41,9 +41,28 @@ $(document).ready(function () {
             
         });
         
-        $('#toggle-all').click(function () {
+        $('#toggle-all').click(function (event) {
             //click on the chevron
             console.log("clicked on the chevron");
+            if(this.checked === true) {
+                console.log("chevron is checked");
+                $('#todo-list li').each( function () {
+                    $(this).find('label').css('text-decoration', 'line-through');
+                    console.log("crossing off: " + $(this).find('label').text());
+                    $(this).find('.toggle').click();
+                    
+                    
+                });
+            } else {
+                console.log("chevron is un-checked");
+                $('#todo-list li').each( function () {
+                    $(this).find('label').css('text-decoration', 'none');
+                    console.log("Un-crossing off: " + $(this).find('label').text());
+                    $(this).find('.toggle').click();
+                });
+            }
+            
+            
         });
         
         $('.destroy').click(function () {
