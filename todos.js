@@ -13,10 +13,11 @@ $(document).ready(function () {
             
         });
         
-        $('#todo-list li').dblclick(function () {
+        $('#todo-list li').dblclick(function (event) {
             //if double click on the list item then can edit it
             console.log("Double click event");
-            $(this).children('label').hide();
+            console.log(event.target.nodeName);
+            listfunctions.editListItem(event);
         });
         
         $('#todo-list li').keyup(function (event) {
@@ -122,11 +123,19 @@ $(document).ready(function () {
                } else {
                    labelitem.css('text-decoration', 'none');
                }
-        }
+        },
         
-        
-        
-        
+        editListItem: function(event) {
+            if(event.target.nodeName == 'LABEL') {
+                console.log('label');
+                //just hide the label
+                $(event.target).hide();
+                //TODO turn off double click listener??
+                //clone inputtemplate and add it in where the label used to be
+                $('.inputtemplate input').clone();
+                
+            }
+        }    
         
     };
 
