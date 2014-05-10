@@ -560,3 +560,7 @@ hr {
 .template {
     display: none;   
 }
+
+.inputtemplate {
+    display: none;
+}

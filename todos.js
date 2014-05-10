@@ -128,14 +128,25 @@ $(document).ready(function () {
         editListItem: function(event) {
             if(event.target.nodeName == 'LABEL') {
                 console.log('label');
-                //just hide the label
+                var inputsib = $(event.target).siblings('input');
+                //save the to do item out and hide the label
+                var labeltext = $(event.target).text();
                 $(event.target).hide();
+                var par = $(event.target).parent();
+                console.log(par);
                 //TODO turn off double click listener??
                 //clone inputtemplate and add it in where the label used to be
-                $('.inputtemplate input').clone();
+                var test = $('.inputtemplate input').clone().after('inputsib');
+              //  var test = $('.inputtemplate input').clone().appendTo('par');
+                test.value = labeltext;
+                
+                console.log(test.value);
+                
+               // $('par .toggle').after(test);
+                
                 
             }
-        }    
+        }
         
     };
 
