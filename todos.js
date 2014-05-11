@@ -39,7 +39,6 @@ $(document).ready(function () {
                 console.log("check mark is not checked");
                 listfunctions.completedListItem(labelitem, false);   
             }  
-            //click on a checkmark
             
         });
         
@@ -80,11 +79,8 @@ $(document).ready(function () {
         
         $('.completed').on("click", function () {
             console.log("clicked on Completed link in footer");
-              
         });
-        
-    }
-    
+    };  
     var util = {
 		uuid: function () {
 			/*jshint bitwise:false */
@@ -152,35 +148,42 @@ $(document).ready(function () {
                 test.value = labeltext;
                 test.css("display", "block");
                 console.log(test.value);
-                
-               // $('par .toggle').after(test);
-                
-                
             }
         },
         
         completedAll: function(checked) {
-            if(checked === true) {
-                 $('#todo-list li').each( function () {
-                    $(this).find('label').css('text-decoration', 'line-through');
-                    console.log("crossing off: " + $(this).find('label').text());
-                    $(this).find('.toggle').click();
+          /* $('#todo-list li').each(function () {
+                var checkstatus = $(this).find('.toggle');
+                if(checked) {
                     
-                    
-                });
-            } else {
-                $('#todo-list li').each( function () {
-                    $(this).find('label').css('text-decoration', 'none');
-                    console.log("Un-crossing off: " + $(this).find('label').text());
-                    $(this).find('.toggle').click();
-                });
-            }
+                    if(checkstatus.checked === false) {
+                        console.log("not crossed off - need to cross off");
+                        checkstatus.click();
+                    }
+                }
+            });*/
+                if(checked === true) {
+                    $('#todo-list li').each( function () {
+                       // var labelitem = $(this).find('label');
+                        var checkstatus = $(this).find('.toggle');
+                           // listfunctions.completedListItem(labelitem, true); 
+                        checkstatus.click();    
+                        //$(this).find('.toggle').click();
+                    });
+                } else {
+                    $('#todo-list li').each( function () {
+                        console.log("Un-crossing off: " + $(this).find('label').text());
+                        var checkstatus = $(this).find('.toggle');
+                        //var labelitem = $(this).find('label'); 
+                       // listfunctions.completedListItem(labelitem, false); 
+                       // $(this).find('.toggle').click();
+                        checkstatus.click();
+                    });
+                }
+               
+           
+          
         }
-        
-        
-    };
-    
-    
-
+    }; 
     setListeners();
 });
