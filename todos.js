@@ -1,5 +1,7 @@
 $(document).ready(function () {
     
+    var listCount = 0;
+    
     function setListeners() {
         
         $('#new-todo').keyup(function (event) {
@@ -13,7 +15,7 @@ $(document).ready(function () {
             
         });
         
-        $('#todo-list li').dblclick(function (event) {
+        $('#todo-list li').on("dblclick", function (event) {
             //if double click on the list item then can edit it
             console.log("Double click event");
             console.log(event.target.nodeName);
@@ -27,7 +29,7 @@ $(document).ready(function () {
             }
         });
        
-        $('.toggle').click(function () {
+        $('.toggle').on("click", function () {
             console.log("Clicked on a checkmark");
             var labelitem = $(this).siblings('label'); 
             if(this.checked) {
@@ -41,7 +43,7 @@ $(document).ready(function () {
             
         });
         
-        $('#toggle-all').click(function (event) {
+        $('#toggle-all').on("click", function (event) {
             //click on the chevron
             console.log("clicked on the chevron");
             if(this.checked === true) {
@@ -54,7 +56,7 @@ $(document).ready(function () {
             }
         });
         
-        $('.destroy').click(function () {
+        $('.destroy').on("click", function () {
            //clicked on the 'X' button
             console.log("clicked to delete to do item");
             var listitem = $(this).parent().parent();
@@ -62,19 +64,23 @@ $(document).ready(function () {
         });
         
         
-        $('.selected').click(function () {
+        $('.selected').on("click", function () {
             console.log("clicked on All link in footer");
+            $('#todo-list li').each( function () {
+                $(this).show();
+            });
             
         });
         
-        $('.active').click(function () {
+        $('.active').on("click", function () {
             console.log("clicked on Active link in footer");
-            
+            //find all the checked checkboxes and hide them
+            $(":checked").parent().parent().hide();    
         });
         
-        $('.completed').click(function () {
+        $('.completed').on("click", function () {
             console.log("clicked on Completed link in footer");
-            
+              
         });
         
     }
@@ -136,18 +142,15 @@ $(document).ready(function () {
         editListItem: function(event) {
             if (event.target.nodeName === 'LABEL') {
                 console.log('label');
-                var inputsib = $(event.target).siblings('input');
                 //save the to do item out and hide the label
                 var labeltext = $(event.target).text();
                 $(event.target).hide();
-                var par = $(event.target).parent();
-                console.log(par);
+                var inputsib = $(event.target).siblings('input');
                 //TODO turn off double click listener??
                 //clone inputtemplate and add it in where the label used to be
-                var test = $('.inputtemplate input').clone().after('inputsib');
-              //  var test = $('.inputtemplate input').clone().appendTo('par');
+                var test = $('.inputtemplate input').clone().insertAfter('inputsib');
                 test.value = labeltext;
-                
+                test.css("display", "block");
                 console.log(test.value);
                 
                // $('par .toggle').after(test);
@@ -174,7 +177,10 @@ $(document).ready(function () {
             }
         }
         
+        
     };
+    
+    
 
     setListeners();
 });
