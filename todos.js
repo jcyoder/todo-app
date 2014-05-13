@@ -139,14 +139,6 @@ $(document).ready(function () {
             else {
                 currentlist.removeClass('completed');
             }
-          
-          /*  
-            if (checked === true) {
-               labelitem.css('text-decoration', 'line-through');
-           } else {
-               labelitem.css('text-decoration', 'none');
-           }
-           */
         },
         
         editListItem: function(event) {
@@ -166,16 +158,17 @@ $(document).ready(function () {
         },
         
         completedAll: function(checked) {
-          /* $('#todo-list li').each(function () {
-                var checkstatus = $(this).find('.toggle');
-                if(checked) {
-                    
-                    if(checkstatus.checked === false) {
-                        console.log("not crossed off - need to cross off");
-                        checkstatus.click();
-                    }
+            if(checked === true) {
+                $(".completed").removeClass("completed");
+                $("#todo-list li").addClass("completed");
+                $(".toggle").prop("checked", true);
                 }
-            });*/
+            else {
+                $(".completed").removeClass("completed");
+                $(".toggle").prop("checked", false);
+                
+            }
+                /*
                 if(checked === true) {
                     $('#todo-list li').each( function () {
                        // var labelitem = $(this).find('label');
@@ -194,7 +187,7 @@ $(document).ready(function () {
                         checkstatus.click();
                     });
                 }
-               
+               */
            
           
         }
