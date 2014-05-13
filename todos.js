@@ -62,28 +62,31 @@ $(document).ready(function () {
         
         $('.selectall').on("click", function () {
             console.log("clicked on All link in footer");
+            $(this).css("font-weight", "bold");
+            $(".active").css("font-weight", "normal");
+            $(".completedlink").css("font-weight", "normal");
             $('#todo-list li').each( function () {
                 $(this).show();
+                                 
             });
             
         });
         
         $('.active').on("click", function () {
             console.log("clicked on Active link in footer");
+             $(this).css("font-weight", "bold");
+            $(".selectall").css("font-weight", "normal");
+            $(".completedlink").css("font-weight", "normal");
             //find all the checked checkboxes and hide them
             $(":checked").parent().parent().hide();    
         });
         
         $('.completedlink').on("click", function () {
             console.log("clicked on Completed link in footer");
-            $(":checked").parent().parent().show();
-            $('#todo-list li').each( function () {
-                var checkmark = $(this).find('.toggle').prop("checked");
-                if(checkmark === false) {
-                    $(this).hide();   
-                }
-            });
-            
+            $(this).css("font-weight", "bold");
+            $(".active").css("font-weight", "normal");
+            $(".selectall").css("font-weight", "normal");
+            listfunctions.showCompletedItems();  
         });
     }; 
     
@@ -180,28 +183,17 @@ $(document).ready(function () {
                 $(".toggle").prop("checked", false);
                 
             }
-                /*
-                if(checked === true) {
-                    $('#todo-list li').each( function () {
-                       // var labelitem = $(this).find('label');
-                        var checkstatus = $(this).find('.toggle');
-                           // listfunctions.completedListItem(labelitem, true); 
-                        checkstatus.click();    
-                        //$(this).find('.toggle').click();
-                    });
-                } else {
-                    $('#todo-list li').each( function () {
-                        console.log("Un-crossing off: " + $(this).find('label').text());
-                        var checkstatus = $(this).find('.toggle');
-                        //var labelitem = $(this).find('label'); 
-                       // listfunctions.completedListItem(labelitem, false); 
-                       // $(this).find('.toggle').click();
-                        checkstatus.click();
-                    });
-                }
-               */
-           
           
+        },
+        
+        showCompletedItems: function()  {
+            $(":checked").parent().parent().show();
+            $('#todo-list li').each( function () {
+                var checkmark = $(this).find('.toggle').prop("checked");
+                if(checkmark === false) {
+                    $(this).hide();   
+                }
+            });
         }
     }; 
     
