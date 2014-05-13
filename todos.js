@@ -77,7 +77,7 @@ $(document).ready(function () {
             $(":checked").parent().parent().hide();    
         });
         
-        $('.completed').on("click", function () {
+        $('.completedlink').on("click", function () {
             console.log("clicked on Completed link in footer");
         });
     };  
@@ -119,6 +119,9 @@ $(document).ready(function () {
             $('#todo-list li:last-child .view label').text(todoitem);
             $('#todo-list li:last-child').attr('data-id', dataUUID);
             $('#new-todo').val('');
+            var newlistitem = $('#todo-list li:last-child');
+            setupNewListeners(newlistitem);
+            
         },
         
         deleteListItem: function (listitem) {
@@ -185,5 +188,56 @@ $(document).ready(function () {
           
         }
     }; 
+    
+    function setupNewListeners(newlistitem) {
+        
+        newlistitem.on("dblclick", function (event) {
+            //if double click on the list item then can edit it
+            console.log("Double click event");
+            console.log(event.target.nodeName);
+            listfunctions.editListItem(event);
+        });
+        
+        newlistitem.keyup(function (event) {
+            //if press the escape key then throw away the edits and keep what you had
+            if (event.which === 27) {
+                console.log("Escape was clicked");
+            }
+        });
+       
+        newlistitem.find('.toggle').on("click", function () {
+            console.log("Clicked on a checkmark");
+            var labelitem = $(this).siblings('label'); 
+            if(this.checked) {
+                listfunctions.completedListItem(labelitem, true);   
+            }
+            else {
+                console.log("check mark is not checked");
+                listfunctions.completedListItem(labelitem, false);   
+            }  
+            
+        });
+        
+        newlistitem.find('#toggle-all').on("click", function (event) {
+            //click on the chevron
+            console.log("clicked on the chevron");
+            if(this.checked === true) {
+                console.log("chevron is checked");
+                listfunctions.completedAll(true);
+            }
+            else {
+                console.log("chevron is un-checked");
+                listfunctions.completedAll(false); 
+            }
+        });
+        
+        newlistitem.find('.destroy').on("click", function () {
+           //clicked on the 'X' button
+            console.log("clicked to delete to do item");
+            var listitem = $(this).parent().parent();
+            listfunctions.deleteListItem(listitem);
+        });
+    }
+    
     setListeners();
 });
