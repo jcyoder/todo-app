@@ -62,9 +62,9 @@ $(document).ready(function () {
         
         $('.selectall').on("click", function () {
             console.log("clicked on All link in footer");
-            $(this).css("font-weight", "bold");
-            $(".active").css("font-weight", "normal");
-            $(".completedlink").css("font-weight", "normal");
+            $(this).addClass("selected");
+            $(".active").removeClass("selected");
+            $(".completedlink").removeClass("selected");
             $('#todo-list li').each( function () {
                 $(this).show();
                                  
@@ -74,18 +74,19 @@ $(document).ready(function () {
         
         $('.active').on("click", function () {
             console.log("clicked on Active link in footer");
-             $(this).css("font-weight", "bold");
-            $(".selectall").css("font-weight", "normal");
-            $(".completedlink").css("font-weight", "normal");
+            $(this).addClass("selected");
+            $(".selectall").removeClass("selected");
+            $(".completedlink").removeClass("selected"); 
             //find all the checked checkboxes and hide them
-            $(":checked").parent().parent().hide();    
+            listfunctions.showActiveItems();
+            
         });
         
         $('.completedlink').on("click", function () {
             console.log("clicked on Completed link in footer");
-            $(this).css("font-weight", "bold");
-            $(".active").css("font-weight", "normal");
-            $(".selectall").css("font-weight", "normal");
+            $(this).addClass("selected");
+            $(".active").removeClass("selected");
+            $(".selectall").removeClass("selected");
             listfunctions.showCompletedItems();  
         });
     }; 
@@ -153,9 +154,6 @@ $(document).ready(function () {
         
         editListItem: function(event) {
             
-            
-            
-            
             if (event.target.nodeName === 'LABEL') {
                 console.log('label');
                 //save the to do item out and hide the label
@@ -172,6 +170,7 @@ $(document).ready(function () {
             
         },
         
+        //clicked on chevron to cross everything off the list
         completedAll: function(checked) {
             if(checked === true) {
                 $(".completed").removeClass("completed");
@@ -185,12 +184,28 @@ $(document).ready(function () {
             }
           
         },
-        
+        //clicked on the Completed link in the footer
         showCompletedItems: function()  {
-            $(":checked").parent().parent().show();
+          //  $(":checked").parent().parent().show();
             $('#todo-list li').each( function () {
                 var checkmark = $(this).find('.toggle').prop("checked");
                 if(checkmark === false) {
+                    $(this).hide();   
+                }
+                else {
+                    $(this).show();   
+                }
+            });
+        },
+        
+        showActiveItems: function()  {
+          //  $(":checked").parent().parent().show();
+            $('#todo-list li').each( function () {
+                var checkmark = $(this).find('.toggle').prop("checked");
+                if(checkmark === false) {
+                    $(this).show();   
+                }
+                else {
                     $(this).hide();   
                 }
             });
