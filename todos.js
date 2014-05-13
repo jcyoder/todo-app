@@ -1,7 +1,5 @@
 $(document).ready(function () {
     
-    var listCount = 0;
-    
     function setListeners() {
         
         $('#new-todo').keyup(function (event) {
@@ -78,8 +76,17 @@ $(document).ready(function () {
         
         $('.completedlink').on("click", function () {
             console.log("clicked on Completed link in footer");
+            $(":checked").parent().parent().show();
+            $('#todo-list li').each( function () {
+                var checkmark = $(this).find('.toggle').prop("checked");
+                if(checkmark === false) {
+                    $(this).hide();   
+                }
+            });
+            
         });
-    };  
+    }; 
+    
     var util = {
 		uuid: function () {
 			/*jshint bitwise:false */
@@ -142,6 +149,10 @@ $(document).ready(function () {
         },
         
         editListItem: function(event) {
+            
+            
+            
+            
             if (event.target.nodeName === 'LABEL') {
                 console.log('label');
                 //save the to do item out and hide the label
@@ -155,6 +166,7 @@ $(document).ready(function () {
                 test.css("display", "block");
                 console.log(test.value);
             }
+            
         },
         
         completedAll: function(checked) {
