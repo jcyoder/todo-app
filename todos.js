@@ -131,6 +131,7 @@ $(document).ready(function () {
             $('#new-todo').val('');
             var newlistitem = $('#todo-list li:last-child');
             setupNewListeners(newlistitem);
+            listfunctions.updateListCount();
             
         },
         
@@ -138,6 +139,7 @@ $(document).ready(function () {
             var idnum = listitem.attr('data-id');
             turnOffListeners(listitem);
             listitem.remove();
+            listfunctions.updateListCount();
            
             // add code to remove from local storage too
         },
@@ -150,6 +152,7 @@ $(document).ready(function () {
             else {
                 currentlist.removeClass('completed');
             }
+            listfunctions.updateListCount();
         },
         
         editListItem: function(event) {
@@ -182,7 +185,7 @@ $(document).ready(function () {
                 $(".toggle").prop("checked", false);
                 
             }
-          
+            listfunctions.updateListCount();
         },
         //clicked on the Completed link in the footer
         showCompletedItems: function()  {
@@ -209,6 +212,23 @@ $(document).ready(function () {
                     $(this).hide();   
                 }
             });
+        },
+        
+        updateListCount: function() {
+            var totallistnum = $('#todo-list li').length;
+            var numcompleted = $(':checked').length;
+            var numactive = totallistnum - numcompleted;
+            console.log("active items: " + numactive);
+            var countstring = '';
+            if(numactive === 1) {
+                countstring = numactive + " item left";
+                $('#footer #todo-count').text(countstring); 
+            }
+            else {
+                countstring = numactive + " items left";
+                $('#footer #todo-count').text(countstring);
+              //  $('#footer #todo-count').text(" items left");   
+            }
         }
     }; 
     
@@ -236,6 +256,7 @@ $(document).ready(function () {
             } else {
                 listfunctions.completedListItem(currentlist, false);
             }
+            
         });
         
         newlistitem.find('#toggle-all').on("click", function (event) {
@@ -249,6 +270,7 @@ $(document).ready(function () {
                 console.log("chevron is un-checked");
                 listfunctions.completedAll(false); 
             }
+            
         });
         
         newlistitem.find('.destroy').on("click", function () {
@@ -264,4 +286,5 @@ $(document).ready(function () {
     }
     
     setListeners();
+    listfunctions.updateListCount();
 });
