@@ -216,7 +216,14 @@ $(document).ready(function () {
         
         updateListCount: function() {
             var totallistnum = $('#todo-list li').length;
-            var numcompleted = $(':checked').length;
+            var numcompleted = 0;
+            $('#todo-list li').each(function () {
+                var checkmark = $(this).find('.toggle').prop("checked");
+                if(checkmark === true) {
+                    numcompleted++;
+                }
+            });
+            // var numcompleted = $(':checked').length;
             var numactive = totallistnum - numcompleted;
             console.log("active items: " + numactive);
             var countstring = '';
