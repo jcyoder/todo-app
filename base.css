@@ -51,6 +51,8 @@ input[type="checkbox"] {
 				0 25px 50px 0 rgba(0, 0, 0, 0.15);
 }
 
+/*light pink vertical lines, before is a pseudo-element - content inserted directly before the element*/
+
 #todoapp:before {
 	content: '';
 	border-left: 1px solid #f5d6d6;
@@ -70,6 +72,8 @@ input[type="checkbox"] {
 	font-style: italic;
 	color: #a9a9a9;
 }
+
+/*todos title*/
 
 #todoapp h1 {
 	position: absolute;
@@ -93,6 +97,9 @@ input[type="checkbox"] {
 	border-radius: inherit;
 }
 
+/*Content inserted directly before the header 
+It is the gradient gray band at the top of the todo list */
+
 #header:before {
 	content: '';
 	position: absolute;
@@ -110,6 +117,9 @@ input[type="checkbox"] {
 	border-top-left-radius: 1px;
 	border-top-right-radius: 1px;
 }
+
+/* new-todo - input box to type in new todo items */
+/* .edit not in original html, added later used when double click to edit todo item */
 
 #new-todo,
 .edit {
@@ -144,15 +154,21 @@ input[type="checkbox"] {
 	box-shadow: none;
 }
 
+/* section where all the entered list items are kept*/
+
 #main {
 	position: relative;
 	z-index: 2;
 	border-top: 1px dotted #adadad;
 }
 
+/* label for the checkbox */
+
 label[for='toggle-all'] {
 	display: none;
 }
+
+/*  checkbox to cross off all items in the list */
 
 #toggle-all {
 	position: absolute;
@@ -164,6 +180,7 @@ label[for='toggle-all'] {
 	border: none;
 }
 
+
 #toggle-all:before {
 	content: '»';
 	font-size: 28px;
@@ -171,14 +188,19 @@ label[for='toggle-all'] {
 	padding: 0 25px 7px;
 }
 
+/* checkbox that has been checked(pseudo-class) use this color at the beginning of the element??
+wondering if this is being used*/
+
 #toggle-all:checked:before {
-	color: #737373;
+    color: #737373;
 }
+
+/* unordered list id for todo list items */
 
 #todo-list {
 	margin: 0;
 	padding: 0;
-	list-style: none;
+	list-style: none; /* remove bullets */
 }
 
 #todo-list li {
@@ -188,13 +210,17 @@ label[for='toggle-all'] {
 }
 
 #todo-list li:last-child {
-	border-bottom: none;
+	border-bottom: none;  /* do not need dotted border for the last list item */
 }
+
+/* class editing is not in original html, added later when editing a list item */
 
 #todo-list li.editing {
 	border-bottom: none;
 	padding: 0;
 }
+
+/* class edit is the input text box for editing a list */
 
 #todo-list li.editing .edit {
 	display: block;
@@ -203,9 +229,13 @@ label[for='toggle-all'] {
 	margin: 0 0 0 43px;
 }
 
+/* view class contains the checkmark checkbox, text of list item,  and the destroy 'X' input */
+
 #todo-list li.editing .view {
 	display: none;
 }
+
+/* style for the checkmark checkbox */
 
 #todo-list li .toggle {
 	text-align: center;
@@ -224,6 +254,9 @@ label[for='toggle-all'] {
 	appearance: none;
 }
 
+/* text content inserted at the end of an element 
+in this case the checkmark that is not checked */
+
 #todo-list li .toggle:after {
 	content: '✔';
 	/* 40 + a couple of pixels visual adjustment */
@@ -233,13 +266,19 @@ label[for='toggle-all'] {
 	text-shadow: 0 -1px 0 #bfbfbf;
 }
 
+/* text content inserted at the end of an element 
+in this case the checkmark that is checked */
+
 #todo-list li .toggle:checked:after {
     color: green;
+    text-shadow: 0 1px 0 #006000;
 	/*color: #85ada7;*/
-	text-shadow: 0 1px 0 #669991;
+	/*text-shadow: 0 1px 0 #669991;*/
 	bottom: 1px;
 	position: relative;
 }
+
+/* style of the todo list item*/
 
 #todo-list li label {
 	white-space: pre;
@@ -252,6 +291,7 @@ label[for='toggle-all'] {
 	transition: color 0.4s;
 }
 
+/* completed class added when cross out a list item */
 
 #todo-list li.completed label {
 	color: #a9a9a9;
@@ -259,6 +299,7 @@ label[for='toggle-all'] {
 }
 
 
+/* destroy is class for the 'X' remove list item button */
 
 #todo-list li .destroy {
 	display: none;
@@ -275,6 +316,8 @@ label[for='toggle-all'] {
 	transition: all 0.2s;
 }
 
+/* when hover over the  remove 'X' glyph, scale it up */
+
 #todo-list li .destroy:hover {
 	text-shadow: 0 0 1px #000,
 				 0 0 10px rgba(199, 107, 107, 0.8);
@@ -283,6 +326,8 @@ label[for='toggle-all'] {
 	transform: scale(1.3);
 }
 
+/* glyph for the remove list item button */
+
 #todo-list li .destroy:after {
 	content: '✖';
 }
@@ -290,6 +335,8 @@ label[for='toggle-all'] {
 #todo-list li:hover .destroy {
 	display: block;
 }
+
+/* hide the edit list item box */
 
 #todo-list li .edit {
 	display: none;
@@ -383,6 +430,14 @@ label[for='toggle-all'] {
 	color: inherit;
 }
 
+.template {
+    display: none;   
+}
+
+.inputtemplate {
+    display: none;
+}
+
 /*
 	Hack to remove background from Mobile Safari.
 	Can't use it globally since it destroys checkboxes in Firefox and Opera
@@ -411,9 +466,7 @@ label[for='toggle-all'] {
 	}
 }
 
-.hidden {
-	display: none;
-}
+
 
 hr {
 	margin: 20px 0;
@@ -422,148 +475,3 @@ hr {
 	border-bottom: 1px dashed #F7F7F7;
 }
 
-.learn a {
-	font-weight: normal;
-	text-decoration: none;
-	color: #b83f45;
-}
-
-.learn a:hover {
-	text-decoration: underline;
-	color: #787e7e;
-}
-
-.learn h3,
-.learn h4,
-.learn h5 {
-	margin: 10px 0;
-	font-weight: 500;
-	line-height: 1.2;
-	color: #000;
-}
-
-.learn h3 {
-	font-size: 24px;
-}
-
-.learn h4 {
-	font-size: 18px;
-}
-
-.learn h5 {
-	margin-bottom: 0;
-	font-size: 14px;
-}
-
-.learn ul {
-	padding: 0;
-	margin: 0 0 30px 25px;
-}
-
-.learn li {
-	line-height: 20px;
-}
-
-.learn p {
-	font-size: 15px;
-	font-weight: 300;
-	line-height: 1.3;
-	margin-top: 0;
-	margin-bottom: 0;
-}
-
-.quote {
-	border: none;
-	margin: 20px 0 60px 0;
-}
-
-.quote p {
-	font-style: italic;
-}
-
-.quote p:before {
-	content: '“';
-	font-size: 50px;
-	opacity: .15;
-	position: absolute;
-	top: -20px;
-	left: 3px;
-}
-
-.quote p:after {
-	content: '”';
-	font-size: 50px;
-	opacity: .15;
-	position: absolute;
-	bottom: -42px;
-	right: 3px;
-}
-
-.quote footer {
-	position: absolute;
-	bottom: -40px;
-	right: 0;
-}
-
-.quote footer img {
-	border-radius: 3px;
-}
-
-.quote footer a {
-	margin-left: 5px;
-	vertical-align: middle;
-}
-
-.speech-bubble {
-	position: relative;
-	padding: 10px;
-	background: rgba(0, 0, 0, .04);
-	border-radius: 5px;
-}
-
-.speech-bubble:after {
-	content: '';
-	position: absolute;
-	top: 100%;
-	right: 30px;
-	border: 13px solid transparent;
-	border-top-color: rgba(0, 0, 0, .04);
-}
-
-.learn-bar > .learn {
-	position: absolute;
-	width: 272px;
-	top: 8px;
-	left: -300px;
-	padding: 10px;
-	border-radius: 5px;
-	background-color: rgba(255, 255, 255, .6);
-	-webkit-transition-property: left;
-	transition-property: left;
-	-webkit-transition-duration: 500ms;
-	transition-duration: 500ms;
-}
-
-@media (min-width: 899px) {
-	.learn-bar {
-		width: auto;
-		margin: 0 0 0 300px;
-	}
-
-	.learn-bar > .learn {
-		left: 8px;
-	}
-
-	.learn-bar #todoapp {
-		width: 550px;
-		margin: 130px auto 40px auto;
-	}
-}
-
-.template {
-    display: none;   
-}
-
-.inputtemplate {
-    display: none;
-}
