@@ -51,7 +51,7 @@ input[type="checkbox"] {
 				0 25px 50px 0 rgba(0, 0, 0, 0.15);
 }
 
-/*light pink vertical lines, before is a pseudo-element - content inserted directly before the element*/
+/*light pink vertical lines, :before is a pseudo-element - content inserted directly before or beginning of the element?*/
 
 #todoapp:before {
 	content: '';
@@ -119,7 +119,7 @@ It is the gradient gray band at the top of the todo list */
 }
 
 /* new-todo - input box to type in new todo items */
-/* .edit not in original html, added later used when double click to edit todo item */
+/* .edit is the edit box, used when double click to edit todo item */
 
 #new-todo,
 .edit {
@@ -235,6 +235,16 @@ wondering if this is being used*/
 	display: none;
 }
 
+/* hide the edit list item box */
+
+#todo-list li .edit {
+	display: none;
+}
+
+#todo-list li.editing:last-child {
+	margin-bottom: -1px;
+}
+
 /* style for the checkmark checkbox */
 
 #todo-list li .toggle {
@@ -336,15 +346,6 @@ in this case the checkmark that is checked */
 	display: block;
 }
 
-/* hide the edit list item box */
-
-#todo-list li .edit {
-	display: none;
-}
-
-#todo-list li.editing:last-child {
-	margin-bottom: -1px;
-}
 
 #footer {
 	color: #777;
