@@ -90,6 +90,7 @@ $(document).ready(function () {
         
         $('#clear-completed').on("click", function () {
             console.log("clear-completed button pressed");
+            deleteAllCompletedItems();
         });
     };
     
@@ -327,6 +328,21 @@ $(document).ready(function () {
             
             $('footer #clear-completed').css("display", "none");
         }
+    }
+    
+    function deleteAllCompletedItems() {
+        console.log("deleteAllCompletedItems");
+        var todoitems = $('#todo-list li');
+        todoitems.each(function () {
+            var checkmark = $(this).find('.toggle').prop("checked");
+            if (checkmark === true) {
+               // var idnum = $(this).attr('data-id');
+                turnOffListeners(todoitems);
+                $(this).remove();
+                listfunctions.updateListCount();
+                verifyClearCompletedDisplay();
+            }
+        });
     }
     
     setListeners();
