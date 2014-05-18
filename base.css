@@ -403,6 +403,7 @@ in this case the checkmark that is checked */
 }
 
 #clear-completed {
+    display:none;
 	float: right;
 	position: relative;
 	line-height: 20px;

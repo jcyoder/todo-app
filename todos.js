@@ -88,6 +88,9 @@ $(document).ready(function () {
             listfunctions.showCompletedItems();
         });
         
+        $('#clear-completed').on("click", function () {
+            console.log("clear-completed button pressed");
+        });
     };
     
     var util = {
@@ -105,9 +108,6 @@ $(document).ready(function () {
 			}
 
 			return uuid;
-		},
-		pluralize: function (count, word) {
-			return count === 1 ? word : word + 's';
 		},
 		store: function (namespace, data) {
 			if (arguments.length > 1) {
@@ -131,6 +131,7 @@ $(document).ready(function () {
             var newlistitem = $('#todo-list li:last-child');
             setupNewListeners(newlistitem);
             listfunctions.updateListCount();
+            verifyClearCompletedDisplay();
             
         },
         
@@ -139,6 +140,7 @@ $(document).ready(function () {
             turnOffListeners(listitem);
             listitem.remove();
             listfunctions.updateListCount();
+            verifyClearCompletedDisplay();
            
             // add code to remove from local storage too
         },
@@ -151,6 +153,7 @@ $(document).ready(function () {
                 currentlist.removeClass('completed');
             }
             listfunctions.updateListCount();
+            verifyClearCompletedDisplay();
         },
         
         editListItem: function (event) {
@@ -163,22 +166,6 @@ $(document).ready(function () {
                 setupEditListener(listitem);
                 
             }
-            
-            
-            /*  if (event.target.nodeName === 'LABEL') {
-                console.log('label');
-                //save the to do item out and hide the label
-                var labeltext = $(event.target).text();
-                $(event.target).hide();
-                var inputsib = $(event.target).siblings('input');
-                //TODO turn off double click listener??
-                //clone inputtemplate and add it in where the label used to be
-                var test = $('.inputtemplate input').clone().insertAfter('inputsib');
-                test.value = labeltext;
-                test.css("display", "block");
-                console.log(test.value);
-            } */
-            
         },
         
         completeEditListItem: function (event) {
@@ -187,6 +174,7 @@ $(document).ready(function () {
             labelelement.text(newtext);
             console.log(labelelement.text());
             $(event.target).closest('li').removeClass('editing');
+           
         },
         
         cancelEditListItem: function (event, listentry) {
@@ -200,22 +188,24 @@ $(document).ready(function () {
                 $(".completed").removeClass("completed");
                 $("#todo-list li").addClass("completed");
                 $(".toggle").prop("checked", true);
+                
             } else {
                 $(".completed").removeClass("completed");
                 $(".toggle").prop("checked", false);
                 
             }
             listfunctions.updateListCount();
+            verifyClearCompletedDisplay();
         },
         //clicked on the Completed link in the footer
         showCompletedItems: function () {
-          //  $(":checked").parent().parent().show();
             $('#todo-list li').each(function () {
                 var checkmark = $(this).find('.toggle').prop("checked");
                 if (checkmark === false) {
                     $(this).hide();
                 } else {
                     $(this).show();
+                    
                 }
             });
         },
@@ -241,7 +231,6 @@ $(document).ready(function () {
                     numcompleted++;
                 }
             });
-            // var numcompleted = $(':checked').length;
             var numactive = totallistnum - numcompleted;
             console.log("active items: " + numactive);
             var countstring = '';
@@ -251,10 +240,9 @@ $(document).ready(function () {
             } else {
                 countstring = numactive + " items left";
                 $('#footer #todo-count').text(countstring);
-              //  $('#footer #todo-count').text(" items left");   
             }
         }
-    }; 
+    };
     
     function setupNewListeners(newlistitem) {
         
@@ -296,6 +284,10 @@ $(document).ready(function () {
             listfunctions.deleteListItem(listitem);
         });
         
+        newlistitem.find('#clear-completed').on("click", function () {
+            console.log("clear-completed button pressed");
+        });
+        
     }
     
     function setupEditListener (listitem) {
@@ -318,6 +310,26 @@ $(document).ready(function () {
         //TODO turn off listeners here
     }
     
+    function verifyClearCompletedDisplay() {
+        var numcompleted = 0;
+        $('#todo-list li').each(function () {
+                var checkmark = $(this).find('.toggle').prop("checked");
+                if (checkmark === true) {
+                    numcompleted++;
+                    
+                }
+        });
+        if (numcompleted > 0) {
+            var buttontext = "Clear Completed (" + numcompleted + ")";
+            $('footer #clear-completed').css("display", "block").text(buttontext);
+            
+        } else {
+            
+            $('footer #clear-completed').css("display", "none");
+        }
+    }
+    
     setListeners();
     listfunctions.updateListCount();
+    verifyClearCompletedDisplay();
 });
