@@ -379,6 +379,10 @@ in this case the checkmark that is checked */
 	text-align: left;
 }
 
+#todo-count #numcountstyle {
+   font-weight: bold; 
+}
+
 #filters {
 	margin: 0;
 	padding: 0;

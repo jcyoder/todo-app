@@ -242,11 +242,26 @@ $(document).ready(function () {
             var countstring = '';
             if (numactive === 1) {
                 countstring = numactive + " item left";
-                $('#footer #todo-count').text(countstring);
+               $('#footer #todo-count').text(countstring);     
             } else {
                 countstring = numactive + " items left";
-                $('#footer #todo-count').text(countstring);
+                $('#footer #todo-count').text(countstring);   
             }
+       /*   
+            $('#footer #todo-count #numcountstyle').text(numactive);
+            if (numactive === 1) {
+                $('#footer #todo-count').text(" item left");
+                
+                // countstring = numactive + " item left";
+             //  $('#footer #todo-count').text(" item left");     
+            } else {
+                var  finalstr = $('#footer #todo-count').text().replace("item", "items");
+           //     $('#footer #todo-count').text("items left");
+          //      $('#footer #todo-count #numcountstyle').text(numactive);
+               // countstring = numactive + " items left";
+               
+            }
+            */
         }
     };
     
