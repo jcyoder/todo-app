@@ -15,8 +15,6 @@ $(document).ready(function () {
         
         $('#todo-list li').on("dblclick", function (event) {
             //if double click on the list item then can edit it
-            console.log("Double click event");
-            console.log(event.target.nodeName);
             listfunctions.editListItem(event);
         });
         
@@ -26,6 +24,7 @@ $(document).ready(function () {
                 console.log("Escape was clicked");
             }
         });
+    
        
         $('.toggle').on("click", function () {
             console.log("Clicked on a checkmark");
@@ -183,7 +182,7 @@ $(document).ready(function () {
            
         },
         
-        cancelEditListItem: function (event, listentry) {
+        cancelEditListItem: function (event) {
             console.log("Cancel edit");
             $(event.target).closest('li').removeClass('editing');
         },
@@ -310,11 +309,11 @@ $(document).ready(function () {
             deleteAllCompletedItems();
         });
         
-        
-        $('.edit').on("focusout", function (event) {
+     /*  newlistitem.find('.edit').on("focusout", function (event) {
             console.log("edit box lost focus");
+      
             listfunctions.completeEditListItem(event);
-        });
+        });*/
         
     }
     
@@ -329,7 +328,7 @@ $(document).ready(function () {
                 
             } else if (event.which === 27) {
                 console.log("Escape was clicked");
-                listfunctions.cancelEditListItem(event, listentry);
+                listfunctions.cancelEditListItem(event);
             }
         });
     }
