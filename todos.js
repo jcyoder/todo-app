@@ -92,6 +92,11 @@ $(document).ready(function () {
             console.log("clear-completed button pressed");
             deleteAllCompletedItems();
         });
+        
+        $('.edit').on("focusout", function (event) {
+            console.log("edit box lost focus");
+            listfunctions.completeEditListItem(event);
+        });
     };
     
     var util = {
@@ -287,6 +292,13 @@ $(document).ready(function () {
         
         newlistitem.find('#clear-completed').on("click", function () {
             console.log("clear-completed button pressed");
+            deleteAllCompletedItems();
+        });
+        
+        
+        $('.edit').on("focusout", function (event) {
+            console.log("edit box lost focus");
+            listfunctions.completeEditListItem(event);
         });
         
     }
