@@ -4,6 +4,7 @@ $(document).ready(function () {
     var todoList = '';
     
     
+    //get the list from local storage and insert the to do items
     function loadTheList() {
         var allCompleted = true; //used to determine whether the chevron(.toggle-all) should be checked
         var i = 0;
@@ -25,18 +26,7 @@ $(document).ready(function () {
         listfunctions.updateListCount();
     }
     
-    function insertEntry(todotext, id, completedstatus) {
-        $('.template li').clone().appendTo('#todo-list');
-		$('#todo-list li:last-child label').text(todotext);
-		$('#todo-list li:last-child').attr('data-id', id);
-		if (completedstatus) {
-			$('#todo-list li:last-child').addClass('completed');
-			$('#todo-list li:last-child .toggle').attr('checked', true);
-		}
-		$('#new-todo').val('');
-		//addListItemListener(id);
-    }
-    
+    //check to see if we have items in local storage otherwise set up to save to local storage
     function loadFromLocalStorage() {
         
       //  if(typeof(Storage)!=="undefined") {
@@ -53,6 +43,20 @@ $(document).ready(function () {
   
     }
     
+    function insertEntry(todotext, id, completedstatus) {
+        $('.template li').clone().appendTo('#todo-list');
+		$('#todo-list li:last-child label').text(todotext);
+		$('#todo-list li:last-child').attr('data-id', id);
+		if (completedstatus) {
+			$('#todo-list li:last-child').addClass('completed');
+			$('#todo-list li:last-child .toggle').attr('checked', true);
+		}
+		$('#new-todo').val('');
+        //should I add listeners here?  Right now in InitApp()
+		//addListItemListener(id);
+    }
+    
+    //generate unique id for each to do item
     function getUuid() {
         /*jshint bitwise:false */
         var i, random;
@@ -69,13 +73,14 @@ $(document).ready(function () {
         return uuid;	
 	}
     
+    //check to see if the Clear Completed button needs to be displayed and
+    //keep track of the number of completed items that is displayed on the button.
     function verifyClearCompletedDisplay() {
         var numcompleted = 0;
         $('#todo-list li').each(function () {
             var checkmark = $(this).find('.toggle').prop("checked");
             if (checkmark === true) {
                 numcompleted++;
-
             }
         });
         if (numcompleted > 0) {
@@ -128,7 +133,7 @@ $(document).ready(function () {
             if (event.target.nodeName === 'LABEL') {
                 var labeltext = $(event.target).text();
                 var listitem = $(event.target).closest('li').addClass('editing');
-                listitem.find(".edit").val(labeltext).focus();
+                listitem.find('.edit').val(labeltext).focus();
                 setupEditListener(listitem);
                 
             }
@@ -149,13 +154,13 @@ $(document).ready(function () {
         //clicked on chevron to cross everything off the list
         completedAll: function (checked) {
             if (checked === true) {
-                $(".completed").removeClass("completed");
-                $("#todo-list li").addClass("completed");
-                $(".toggle").prop("checked", true);
+                $('.completed').removeClass('completed');
+                $('#todo-list li').addClass('completed');
+                $('.toggle').prop('checked', true);
                 
             } else {
-                $(".completed").removeClass("completed");
-                $(".toggle").prop("checked", false);
+                $('.completed').removeClass('completed');
+                $('.toggle').prop('checked', false);
                 
             }
             listfunctions.updateListCount();
@@ -164,7 +169,7 @@ $(document).ready(function () {
         //clicked on the Completed link in the footer
         showCompletedItems: function () {
             $('#todo-list li').each(function () {
-                var checkmark = $(this).find('.toggle').prop("checked");
+                var checkmark = $(this).find('.toggle').prop('checked');
                 if (checkmark === false) {
                     $(this).hide();
                 } else {
@@ -177,7 +182,7 @@ $(document).ready(function () {
         showActiveItems: function () {
           //  $(":checked").parent().parent().show();
             $('#todo-list li').each(function () {
-                var checkmark = $(this).find('.toggle').prop("checked");
+                var checkmark = $(this).find('.toggle').prop('checked');
                 if (checkmark === false) {
                     $(this).show();
                 } else {
@@ -190,7 +195,7 @@ $(document).ready(function () {
             var totallistnum = $('#todo-list li').length;
             var numcompleted = 0;
             $('#todo-list li').each(function () {
-                var checkmark = $(this).find('.toggle').prop("checked");
+                var checkmark = $(this).find('.toggle').prop('checked');
                 if (checkmark === true) {
                     numcompleted++;
                 }
@@ -230,13 +235,14 @@ $(document).ready(function () {
             //13 is the enter key
             if (event.which === 13) {
                 var listentry = this.value;
-                console.log(listentry);
-                listfunctions.addtoList(listentry);
+                if(listentry !== '') {
+                    listfunctions.addtoList(listentry);
+                }
             }
             
         });
         
-        $('#todo-list li').on("dblclick", function (event) {
+        $('#todo-list li').on('dblclick', function (event) {
             //if double click on the list item then can edit it
             listfunctions.editListItem(event);
         });
@@ -249,7 +255,7 @@ $(document).ready(function () {
         });
     */
        
-        $('.toggle').on("click", function () {
+        $('.toggle').on('click', function () {
             console.log("Clicked on a checkmark");
             var currentlist = $(this).parent().parent();
             if (this.checked === true) {
@@ -260,7 +266,7 @@ $(document).ready(function () {
             
         });
         
-        $('#toggle-all').on("click", function (event) {
+        $('#toggle-all').on('click', function (event) {
             //click on the chevron
             if (this.checked === true) {
                 listfunctions.completedAll(true);
@@ -269,17 +275,17 @@ $(document).ready(function () {
             }
         });
         
-        $('.destroy').on("click", function () {
+        $('.destroy').on('click', function () {
            //clicked on the 'X' button
             var listitem = $(this).parent().parent();
             listfunctions.deleteListItem(listitem);
         });
         
         
-        $('.selectall').on("click", function () {
+        $('.selectall').on('click', function () {
             $(this).addClass("selected");
-            $(".active").removeClass("selected");
-            $(".completedlink").removeClass("selected");
+            $('.active').removeClass('selected');
+            $('.completedlink').removeClass('selected');
             $('#todo-list li').each(function () {
                 $(this).show();
                                  
@@ -287,27 +293,27 @@ $(document).ready(function () {
             
         });
         
-        $('.active').on("click", function () {
-            $(this).addClass("selected");
-            $(".selectall").removeClass("selected");
-            $(".completedlink").removeClass("selected");
+        $('.active').on('click', function () {
+            $(this).addClass('selected');
+            $('.selectall').removeClass('selected');
+            $('.completedlink').removeClass('selected');
             //find all the checked checkboxes and hide them
             listfunctions.showActiveItems();
             
         });
         
-        $('.completedlink').on("click", function () {
-            $(this).addClass("selected");
-            $(".active").removeClass("selected");
-            $(".selectall").removeClass("selected");
+        $('.completedlink').on('click', function () {
+            $(this).addClass('selected');
+            $('.active').removeClass('selected');
+            $('.selectall').removeClass('selected');
             listfunctions.showCompletedItems();
         });
         
-        $('#clear-completed').on("click", function () {
+        $('#clear-completed').on('click', function () {
             deleteAllCompletedItems();
         });
         
-        $('.edit').on("focusout", function (event) {
+        $('.edit').on('focusout', function (event) {
             console.log("edit box lost focus");
             listfunctions.completeEditListItem(event);
         });
@@ -315,14 +321,14 @@ $(document).ready(function () {
     
     function setupNewListeners(newlistitem) {
         
-        newlistitem.on("dblclick", function (event) {
+        newlistitem.on('dblclick', function (event) {
             //if double click on the list item then can edit it
             console.log("Double click event");
             console.log(event.target.nodeName);
             listfunctions.editListItem(event);
         });
        
-        newlistitem.find('.toggle').on("click", function () {
+        newlistitem.find('.toggle').on('click', function () {
             var currentlist = $(this).parent().parent();
             if (this.checked === true) {
                 listfunctions.completedListItem(currentlist, true);
@@ -332,7 +338,7 @@ $(document).ready(function () {
             
         });
         
-        newlistitem.find('#toggle-all').on("click", function (event) {
+        newlistitem.find('#toggle-all').on('click', function (event) {
             //click on the chevron
             if (this.checked === true) {
                 listfunctions.completedAll(true);
@@ -342,15 +348,13 @@ $(document).ready(function () {
             
         });
         
-        newlistitem.find('.destroy').on("click", function () {
+        newlistitem.find('.destroy').on('click', function () {
            //clicked on the 'X' button
-            console.log("clicked to delete to do item");
             var listitem = $(this).parent().parent();
             listfunctions.deleteListItem(listitem);
         });
         
-        newlistitem.find('#clear-completed').on("click", function () {
-            console.log("clear-completed button pressed");
+        newlistitem.find('#clear-completed').on('click', function () {
             deleteAllCompletedItems();
         });
         
@@ -386,7 +390,7 @@ $(document).ready(function () {
         console.log("deleteAllCompletedItems");
         var todoitems = $('#todo-list li');
         todoitems.each(function () {
-            var checkmark = $(this).find('.toggle').prop("checked");
+            var checkmark = $(this).find('.toggle').prop('checked');
             if (checkmark === true) {
                // var idnum = $(this).attr('data-id');
                 turnOffListeners(todoitems);
