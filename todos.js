@@ -152,7 +152,7 @@ $(document).ready(function () {
         },
         
         //clicked on chevron to cross everything off the list
-        completedAll: function (checked) {
+        markAllCompleted: function (checked) {
             if (checked === true) {
                 $('.completed').removeClass('completed');
                 $('#todo-list li').addClass('completed');
@@ -266,12 +266,13 @@ $(document).ready(function () {
             
         });
         
+        //click to cross all items off or on
         $('#toggle-all').on('click', function (event) {
             //click on the chevron
             if (this.checked === true) {
-                listfunctions.completedAll(true);
+                listfunctions.markAllCompleted(true);
             } else {
-                listfunctions.completedAll(false);
+                listfunctions.markAllCompleted(false);
             }
         });
         
@@ -341,9 +342,9 @@ $(document).ready(function () {
         newlistitem.find('#toggle-all').on('click', function (event) {
             //click on the chevron
             if (this.checked === true) {
-                listfunctions.completedAll(true);
+                listfunctions.markAllCompleted(true);
             } else {
-                listfunctions.completedAll(false);
+                listfunctions.markAllCompleted(false);
             }
             
         });
