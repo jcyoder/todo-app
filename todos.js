@@ -1,134 +1,97 @@
 $(document).ready(function () {
     
-    function setListeners() {
-        
-        $('#new-todo').keyup(function (event) {
-            //13 is the enter key
-            if (event.which === 13) {
-                console.log("enter key was pressed");
-                var listentry = this.value;
-                console.log(listentry);
-                listfunctions.addtoList(listentry);
-            }
-            
-        });
-        
-        $('#todo-list li').on("dblclick", function (event) {
-            //if double click on the list item then can edit it
-            listfunctions.editListItem(event);
-        });
-        
-        $('#todo-list li').keyup(function (event) {
-            //if press the escape key then throw away the edits and keep what you had
-            if (event.which === 27) {
-                console.log("Escape was clicked");
-            }
-        });
+    //name to use for local storage
+    var todoList = '';
     
-       
-        $('.toggle').on("click", function () {
-            console.log("Clicked on a checkmark");
-            var currentlist = $(this).parent().parent();
-            if (this.checked === true) {
-                listfunctions.completedListItem(currentlist, true);
-            } else {
-                listfunctions.completedListItem(currentlist, false);
-            }
-            
-        });
-        
-        $('#toggle-all').on("click", function (event) {
-            //click on the chevron
-            console.log("clicked on the chevron");
-            if (this.checked === true) {
-                console.log("chevron is checked");
-                listfunctions.completedAll(true);
-            } else {
-                console.log("chevron is un-checked");
-                listfunctions.completedAll(false);
-            }
-        });
-        
-        $('.destroy').on("click", function () {
-           //clicked on the 'X' button
-            console.log("clicked to delete to do item");
-            var listitem = $(this).parent().parent();
-            listfunctions.deleteListItem(listitem);
-        });
-        
-        
-        $('.selectall').on("click", function () {
-            console.log("clicked on All link in footer");
-            $(this).addClass("selected");
-            $(".active").removeClass("selected");
-            $(".completedlink").removeClass("selected");
-            $('#todo-list li').each(function () {
-                $(this).show();
-                                 
-            });
-            
-        });
-        
-        $('.active').on("click", function () {
-            console.log("clicked on Active link in footer");
-            $(this).addClass("selected");
-            $(".selectall").removeClass("selected");
-            $(".completedlink").removeClass("selected");
-            //find all the checked checkboxes and hide them
-            listfunctions.showActiveItems();
-            
-        });
-        
-        $('.completedlink').on("click", function () {
-            console.log("clicked on Completed link in footer");
-            $(this).addClass("selected");
-            $(".active").removeClass("selected");
-            $(".selectall").removeClass("selected");
-            listfunctions.showCompletedItems();
-        });
-        
-        $('#clear-completed').on("click", function () {
-            console.log("clear-completed button pressed");
-            deleteAllCompletedItems();
-        });
-        
-        $('.edit').on("focusout", function (event) {
-            console.log("edit box lost focus");
-            listfunctions.completeEditListItem(event);
-        });
-    };
     
-    var util = {
-		uuid: function () {
-			/*jshint bitwise:false */
-			var i, random;
-			var uuid = '';
-
-			for (i = 0; i < 32; i++) {
-				random = Math.random() * 16 | 0;
-				if (i === 8 || i === 12 || i === 16 || i === 20) {
-					uuid += '-';
+    function loadTheList() {
+        var allCompleted = true; //used to determine whether the chevron(.toggle-all) should be checked
+        var i = 0;
+        todoList = JSON.parse(localStorage.getItem('todoList'));
+        if (todoList.length > 0) {
+            for (i = 0; i <= todoList.length - 1; i++) {
+				// insert the todo into the html list.
+				insertEntry(todoList[i]['todotext'], todoList[i]['id'], todoList[i]['completed']);
+                if (todoList[i]['completed'] === false) {
+					allCompleted = false;
 				}
-				uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
 			}
-
-			return uuid;
-		},
-		store: function (namespace, data) {
-			if (arguments.length > 1) {
-				return localStorage.setItem(namespace, JSON.stringify(data));
-			} else {
-				var store = localStorage.getItem(namespace);
-				return (store && JSON.parse(store)) || [];
-			}
-		}
-	};
+            
+            if (allCompleted === true) {
+                $('#toggle-all').prop('checked', true);
+            }
+        }
+        
+        listfunctions.updateListCount();
+    }
     
+    function insertEntry(todotext, id, completedstatus) {
+        $('.template li').clone().appendTo('#todo-list');
+		$('#todo-list li:last-child label').text(todotext);
+		$('#todo-list li:last-child').attr('data-id', id);
+		if (completedstatus) {
+			$('#todo-list li:last-child').addClass('completed');
+			$('#todo-list li:last-child .toggle').attr('checked', true);
+		}
+		$('#new-todo').val('');
+		//addListItemListener(id);
+    }
+    
+    function loadFromLocalStorage() {
+        
+      //  if(typeof(Storage)!=="undefined") {
+        //    console.log(Storage);
+        //}
+        if (localStorage && localStorage.length > 0) {
+			// run LoadtheList to insert all the todo list items
+            loadTheList();
+		} else {
+            //create an empty array and store it in local storage
+			var a = [];
+			localStorage.setItem('todoList', JSON.stringify(a));
+		}
+  
+    }
+    
+    function getUuid() {
+        /*jshint bitwise:false */
+        var i, random;
+        var uuid = '';
+
+        for (i = 0; i < 32; i++) {
+            random = Math.random() * 16 | 0;
+            if (i === 8 || i === 12 || i === 16 || i === 20) {
+                uuid += '-';
+            }
+            uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
+        }
+
+        return uuid;	
+	}
+    
+    function verifyClearCompletedDisplay() {
+        var numcompleted = 0;
+        $('#todo-list li').each(function () {
+            var checkmark = $(this).find('.toggle').prop("checked");
+            if (checkmark === true) {
+                numcompleted++;
+
+            }
+        });
+        if (numcompleted > 0) {
+            var buttontext = "Clear Completed (" + numcompleted + ")";
+            $('footer #clear-completed').css("display", "block").text(buttontext);
+            
+        } else {
+            
+            $('footer #clear-completed').css("display", "none");
+        }
+    }
     
     var listfunctions = {
         
         addtoList: function (todoitem) {
-            var dataUUID = util.uuid();
+            var dataUUID = getUuid();
             $('.template li').clone().appendTo('#todo-list');
             $('#todo-list li:last-child .view label').text(todoitem);
             $('#todo-list li:last-child').attr('data-id', dataUUID);
@@ -152,7 +115,6 @@ $(document).ready(function () {
         
         completedListItem: function (currentlist, checked) {
             if (checked === true) {
-                console.log("checkmark is checked");
                 currentlist.addClass('completed');
             } else {
                 currentlist.removeClass('completed');
@@ -164,7 +126,6 @@ $(document).ready(function () {
         editListItem: function (event) {
             
             if (event.target.nodeName === 'LABEL') {
-                console.log('Editing todo list item label');
                 var labeltext = $(event.target).text();
                 var listitem = $(event.target).closest('li').addClass('editing');
                 listitem.find(".edit").val(labeltext).focus();
@@ -177,13 +138,11 @@ $(document).ready(function () {
             var newtext = $(event.target).val();
             var labelelement = $(event.target).parent().find('.view label');
             labelelement.text(newtext);
-            console.log(labelelement.text());
             $(event.target).closest('li').removeClass('editing');
            
         },
         
         cancelEditListItem: function (event) {
-            console.log("Cancel edit");
             $(event.target).closest('li').removeClass('editing');
         },
         
@@ -237,14 +196,13 @@ $(document).ready(function () {
                 }
             });
             var numactive = totallistnum - numcompleted;
-            console.log("active items: " + numactive);
             var countstring = '';
             if (numactive === 1) {
                 countstring = numactive + " item left";
-               $('#footer #todo-count').text(countstring);     
+                $('#footer #todo-count').text(countstring);
             } else {
                 countstring = numactive + " items left";
-                $('#footer #todo-count').text(countstring);   
+                $('#footer #todo-count').text(countstring);
             }
        /*   
             $('#footer #todo-count #numcountstyle').text(numactive);
@@ -264,6 +222,97 @@ $(document).ready(function () {
         }
     };
     
+    
+    
+    function setListeners() {
+        
+        $('#new-todo').keyup(function (event) {
+            //13 is the enter key
+            if (event.which === 13) {
+                var listentry = this.value;
+                console.log(listentry);
+                listfunctions.addtoList(listentry);
+            }
+            
+        });
+        
+        $('#todo-list li').on("dblclick", function (event) {
+            //if double click on the list item then can edit it
+            listfunctions.editListItem(event);
+        });
+        
+    /*    $('#todo-list li').keyup(function (event) {
+            //if press the escape key then throw away the edits and keep what you had
+            if (event.which === 27) {
+                console.log("Escape was clicked");
+            }
+        });
+    */
+       
+        $('.toggle').on("click", function () {
+            console.log("Clicked on a checkmark");
+            var currentlist = $(this).parent().parent();
+            if (this.checked === true) {
+                listfunctions.completedListItem(currentlist, true);
+            } else {
+                listfunctions.completedListItem(currentlist, false);
+            }
+            
+        });
+        
+        $('#toggle-all').on("click", function (event) {
+            //click on the chevron
+            if (this.checked === true) {
+                listfunctions.completedAll(true);
+            } else {
+                listfunctions.completedAll(false);
+            }
+        });
+        
+        $('.destroy').on("click", function () {
+           //clicked on the 'X' button
+            var listitem = $(this).parent().parent();
+            listfunctions.deleteListItem(listitem);
+        });
+        
+        
+        $('.selectall').on("click", function () {
+            $(this).addClass("selected");
+            $(".active").removeClass("selected");
+            $(".completedlink").removeClass("selected");
+            $('#todo-list li').each(function () {
+                $(this).show();
+                                 
+            });
+            
+        });
+        
+        $('.active').on("click", function () {
+            $(this).addClass("selected");
+            $(".selectall").removeClass("selected");
+            $(".completedlink").removeClass("selected");
+            //find all the checked checkboxes and hide them
+            listfunctions.showActiveItems();
+            
+        });
+        
+        $('.completedlink').on("click", function () {
+            $(this).addClass("selected");
+            $(".active").removeClass("selected");
+            $(".selectall").removeClass("selected");
+            listfunctions.showCompletedItems();
+        });
+        
+        $('#clear-completed').on("click", function () {
+            deleteAllCompletedItems();
+        });
+        
+        $('.edit').on("focusout", function (event) {
+            console.log("edit box lost focus");
+            listfunctions.completeEditListItem(event);
+        });
+    };
+    
     function setupNewListeners(newlistitem) {
         
         newlistitem.on("dblclick", function (event) {
@@ -274,7 +323,6 @@ $(document).ready(function () {
         });
        
         newlistitem.find('.toggle').on("click", function () {
-            console.log("Clicked on a checkmark");
             var currentlist = $(this).parent().parent();
             if (this.checked === true) {
                 listfunctions.completedListItem(currentlist, true);
@@ -286,12 +334,9 @@ $(document).ready(function () {
         
         newlistitem.find('#toggle-all').on("click", function (event) {
             //click on the chevron
-            console.log("clicked on the chevron");
             if (this.checked === true) {
-                console.log("chevron is checked");
                 listfunctions.completedAll(true);
             } else {
-                console.log("chevron is un-checked");
                 listfunctions.completedAll(false);
             }
             
@@ -337,25 +382,6 @@ $(document).ready(function () {
         //TODO turn off listeners here
     }
     
-    function verifyClearCompletedDisplay() {
-        var numcompleted = 0;
-        $('#todo-list li').each(function () {
-                var checkmark = $(this).find('.toggle').prop("checked");
-                if (checkmark === true) {
-                    numcompleted++;
-                    
-                }
-        });
-        if (numcompleted > 0) {
-            var buttontext = "Clear Completed (" + numcompleted + ")";
-            $('footer #clear-completed').css("display", "block").text(buttontext);
-            
-        } else {
-            
-            $('footer #clear-completed').css("display", "none");
-        }
-    }
-    
     function deleteAllCompletedItems() {
         console.log("deleteAllCompletedItems");
         var todoitems = $('#todo-list li');
@@ -371,7 +397,12 @@ $(document).ready(function () {
         });
     }
     
-    setListeners();
-    listfunctions.updateListCount();
-    verifyClearCompletedDisplay();
+    function InitApp() {
+        loadFromLocalStorage();
+        setListeners();
+        listfunctions.updateListCount();
+        verifyClearCompletedDisplay();
+    }
+    
+    InitApp();
 });
