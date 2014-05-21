@@ -52,8 +52,8 @@ $(document).ready(function () {
 			$('#todo-list li:last-child .toggle').attr('checked', true);
 		}
 		$('#new-todo').val('');
-        //should I add listeners here?  Right now in InitApp()
-		//addListItemListener(id);
+        var newlistitem = $('#todo-list li:last-child');
+		setupListItemListener(newlistitem);
     }
     
     //generate unique id for each to do item
@@ -102,7 +102,8 @@ $(document).ready(function () {
             $('#todo-list li:last-child').attr('data-id', dataUUID);
             $('#new-todo').val('');
             var newlistitem = $('#todo-list li:last-child');
-            setupNewListeners(newlistitem);
+            //setupNewListeners(newlistitem);
+            setListItemListeners(newlistitem);
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
             
@@ -208,7 +209,29 @@ $(document).ready(function () {
         }
     };
     
-    
+    function setListItemListeners () {
+         $('#todo-list li').on('dblclick', function (event) {
+            //if double click on the list item then can edit it
+            listfunctions.editListItem(event);
+        });
+        
+        $('.toggle').on('click', function () {
+            console.log("Clicked on a checkmark");
+            var currentlist = $(this).parent().parent();
+            if (this.checked === true) {
+                listfunctions.completedListItem(currentlist, true);
+            } else {
+                listfunctions.completedListItem(currentlist, false);
+            }
+            
+        });
+        
+        $('.destroy').on('click', function () {
+           //clicked on the 'X' button
+            var listitem = $(this).parent().parent();
+            listfunctions.deleteListItem(listitem);
+        });
+    }
     
     function setListeners() {
         
@@ -223,30 +246,6 @@ $(document).ready(function () {
             
         });
         
-        $('#todo-list li').on('dblclick', function (event) {
-            //if double click on the list item then can edit it
-            listfunctions.editListItem(event);
-        });
-        
-    /*    $('#todo-list li').keyup(function (event) {
-            //if press the escape key then throw away the edits and keep what you had
-            if (event.which === 27) {
-                console.log("Escape was clicked");
-            }
-        });
-    */
-       
-        $('.toggle').on('click', function () {
-            console.log("Clicked on a checkmark");
-            var currentlist = $(this).parent().parent();
-            if (this.checked === true) {
-                listfunctions.completedListItem(currentlist, true);
-            } else {
-                listfunctions.completedListItem(currentlist, false);
-            }
-            
-        });
-        
         //click to cross all items off or on
         $('#toggle-all').on('click', function (event) {
             //click on the chevron
@@ -255,12 +254,6 @@ $(document).ready(function () {
             } else {
                 listfunctions.markAllCompleted(false);
             }
-        });
-        
-        $('.destroy').on('click', function () {
-           //clicked on the 'X' button
-            var listitem = $(this).parent().parent();
-            listfunctions.deleteListItem(listitem);
         });
         
         
@@ -300,53 +293,6 @@ $(document).ready(function () {
             listfunctions.completeEditListItem(event);
         });
     };
-    
-    function setupNewListeners(newlistitem) {
-        
-        newlistitem.on('dblclick', function (event) {
-            //if double click on the list item then can edit it
-            console.log("Double click event");
-            console.log(event.target.nodeName);
-            listfunctions.editListItem(event);
-        });
-       
-        newlistitem.find('.toggle').on('click', function () {
-            var currentlist = $(this).parent().parent();
-            if (this.checked === true) {
-                listfunctions.completedListItem(currentlist, true);
-            } else {
-                listfunctions.completedListItem(currentlist, false);
-            }
-            
-        });
-        
-        newlistitem.find('#toggle-all').on('click', function (event) {
-            //click on the chevron
-            if (this.checked === true) {
-                listfunctions.markAllCompleted(true);
-            } else {
-                listfunctions.markAllCompleted(false);
-            }
-            
-        });
-        
-        newlistitem.find('.destroy').on('click', function () {
-           //clicked on the 'X' button
-            var listitem = $(this).parent().parent();
-            listfunctions.deleteListItem(listitem);
-        });
-        
-        newlistitem.find('#clear-completed').on('click', function () {
-            deleteAllCompletedItems();
-        });
-        
-     /*  newlistitem.find('.edit').on("focusout", function (event) {
-            console.log("edit box lost focus");
-      
-            listfunctions.completeEditListItem(event);
-        });*/
-        
-    }
     
     function setupEditListener (listitem) {
         listitem.find('.edit').keyup(function (event) {
