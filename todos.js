@@ -201,14 +201,9 @@ $(document).ready(function () {
                 }
             });
             var numactive = totallistnum - numcompleted;
-            var countstring = '';
-            if (numactive === 1) {
-                countstring = numactive + " item left";
-                $('#footer #todo-count').text(countstring);
-            } else {
-                countstring = numactive + " items left";
-                $('#footer #todo-count').text(countstring);
-            }
+            var countstring = "<strong>" + numactive + "</strong> item" + ((numactive ===  1) ? '' : 's') + " left";
+            //.html() allows you to insert an actual html content
+            $('#footer #todo-count').html(countstring);
             
         }
     };
