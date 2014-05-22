@@ -135,7 +135,7 @@ $(document).ready(function () {
                 var labeltext = $(event.target).text();
                 var listitem = $(event.target).closest('li').addClass('editing');
                 listitem.find('.edit').val(labeltext).focus();
-                setupEditListener(listitem);
+                setupEditListeners(listitem);
                 
             }
         },
@@ -288,13 +288,9 @@ $(document).ready(function () {
             deleteAllCompletedItems();
         });
         
-        $('.edit').on('focusout', function (event) {
-            console.log("edit box lost focus");
-            listfunctions.completeEditListItem(event);
-        });
     };
     
-    function setupEditListener (listitem) {
+    function setupEditListeners (listitem) {
         listitem.find('.edit').keyup(function (event) {
              console.log("new keyup listener for editbox");
             if (event.which === 13) {
@@ -308,6 +304,12 @@ $(document).ready(function () {
                 listfunctions.cancelEditListItem(event);
             }
         });
+        
+        listitem.find('.edit').on('blur', function (event) {
+            listfunctions.completeEditListItem(event);
+        });
+        
+        
     }
         
     function turnOffListeners(listitem) {
