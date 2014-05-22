@@ -118,6 +118,25 @@ $(document).ready(function () {
         }
     }
     
+    function updateListTextStorage(idnum, newtext) {
+       // var idnum = $('.editing').attr('data-id');
+		for(i = 0; i <= todoList.length-1; i++) {
+			if(todoList[i]['id'] == idnum) {				
+				todoList[i]['todotext'] = newtext;
+			}
+		}
+		localStorage.setItem('todoList', JSON.stringify(todoList));
+    }
+    
+    function updateCompletedStorage(idnum, checked) {
+        for(i = 0; i <= todoList.length-1; i++) {
+			if(todoList[i]['id'] == idnum) {				
+				todoList[i]['completed'] = checked;
+			}
+			localStorage.setItem('todoList', JSON.stringify(todoList));
+		}	
+    }
+    
     var listfunctions = {
         
         addtoList: function (todoitem) {
@@ -153,11 +172,13 @@ $(document).ready(function () {
         },
         
         completedListItem: function (currentlist, checked) {
+            var idnum = currentlist.attr('data-id');
             if (checked === true) {
                 currentlist.addClass('completed');
             } else {
                 currentlist.removeClass('completed');
             }
+            updateCompletedStorage(idnum, checked);
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
         },
@@ -173,12 +194,16 @@ $(document).ready(function () {
             }
         },
         
+        //I finished editing the list item
         completeEditListItem: function (event) {
+            
             var newtext = $(event.target).val();
             var labelelement = $(event.target).parent().find('.view label');
             labelelement.text(newtext);
+            var idnum = $(event.target).parent().attr('data-id');
+            updateListTextStorage(idnum, newtext);
             $(event.target).closest('li').removeClass('editing');
-           
+            
         },
         
         cancelEditListItem: function (event) {
@@ -197,6 +222,12 @@ $(document).ready(function () {
                 $('.toggle').prop('checked', false);
                 
             }
+            
+            for(var i = 0; i <= todoList.length-1; i++) {
+				todoList[i]['completed'] = true;
+			}
+            
+            localStorage.setItem('todoList', JSON.stringify(todoList));
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
         },
