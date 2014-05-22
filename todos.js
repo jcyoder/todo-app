@@ -93,16 +93,41 @@ $(document).ready(function () {
         }
     }
     
+    function saveToStorage(todoentry) {
+        todoList = [];
+        if (localStorage.getItem('todoList') === null) {
+            todoList = [];
+        } else {
+            // Parse the serialized data back into an array of objects
+            todoList = JSON.parse(localStorage.getItem('todoList'));
+        }
+        // Push the new data (whether it be an object or anything else) onto the array
+	    todoList.push(todoentry);
+	    // Re-serialize the array back into a string and store it in localStorage
+	    localStorage.setItem('todoList', JSON.stringify(todoList));
+        
+    }
+    
+    function removeFromStorage(idnum) {
+        var i = 0;
+        for (i = 0; i <  todoList.length; i++) {
+			if(todoList[i]['id'] == idnum){
+				todoList.splice(i,1);  //splice - remove 1 item from position i in the array
+				localStorage.setItem('todoList', JSON.stringify(todoList));
+            }
+        }
+    }
+    
     var listfunctions = {
         
         addtoList: function (todoitem) {
             var entry = todoitem;
             var dataUUID = getUuid();
             var todoentry = {
-                'id':dataUUID,
-                'todotext':entry,
-                'completed':false
-            }
+                'id': dataUUID,
+                'todotext': entry,
+                'completed': false
+            };
             
             $('.template li').clone().appendTo('#todo-list');
             $('#todo-list li:last-child .view label').text(entry);
@@ -120,12 +145,11 @@ $(document).ready(function () {
         
         deleteListItem: function (listitem) {
             var idnum = listitem.attr('data-id');
+            removeFromStorage(idnum); 
             turnOffListeners(listitem);
             listitem.remove();
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
-           
-            // add code to remove from local storage too
         },
         
         completedListItem: function (currentlist, checked) {
@@ -218,23 +242,9 @@ $(document).ready(function () {
         }
     };
     
-    function saveToStorage(todoentry) {
-        todoList = [];
-        if (localStorage.getItem('todoList') === null) {
-            todoList = [];
-        } else {
-            // Parse the serialized data back into an array of objects
-            todoList = JSON.parse(localStorage.getItem('todoList'));
-        }
-        // Push the new data (whether it be an object or anything else) onto the array
-	    todoList.push(todoentry);
-	    // Re-serialize the array back into a string and store it in localStorage
-	    localStorage.setItem('todoList', JSON.stringify(todoList));
-        
-    }
     
-    function setListItemListeners () {
-         $('#todo-list li').on('dblclick', function (event) {
+    function setListItemListeners() {
+        $('#todo-list li').on('dblclick', function (event) {
             //if double click on the list item then can edit it
             listfunctions.editListItem(event);
         });
@@ -263,7 +273,7 @@ $(document).ready(function () {
             //13 is the enter key
             if (event.which === 13) {
                 var listentry = this.value;
-                if(listentry !== '') {
+                if (listentry !== '') {
                     listfunctions.addtoList(listentry);
                 }
             }
@@ -314,7 +324,7 @@ $(document).ready(function () {
         
     };
     
-    function setupEditListeners (listitem) {
+    function setupEditListeners(listitem) {
         listitem.find('.edit').on('keyup', function (event) {
              console.log("new keyup listener for editbox");
             if (event.which === 13) {
@@ -346,7 +356,8 @@ $(document).ready(function () {
         todoitems.each(function () {
             var checkmark = $(this).find('.toggle').prop('checked');
             if (checkmark === true) {
-               // var idnum = $(this).attr('data-id');
+                var idnum = $(this).attr('data-id');
+                removeFromStorage(idnum);
                 turnOffListeners(todoitems);
                 $(this).remove();
                 listfunctions.updateListCount();
