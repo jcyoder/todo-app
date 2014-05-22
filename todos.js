@@ -53,7 +53,7 @@ $(document).ready(function () {
 		}
 		$('#new-todo').val('');
         var newlistitem = $('#todo-list li:last-child');
-		setupListItemListener(newlistitem);
+		setListItemListeners(newlistitem);
     }
     
     //generate unique id for each to do item
@@ -96,14 +96,23 @@ $(document).ready(function () {
     var listfunctions = {
         
         addtoList: function (todoitem) {
+            var entry = todoitem;
             var dataUUID = getUuid();
+            var todoentry = {
+                'id':dataUUID,
+                'todotext':entry,
+                'completed':false
+            }
+            
             $('.template li').clone().appendTo('#todo-list');
-            $('#todo-list li:last-child .view label').text(todoitem);
+            $('#todo-list li:last-child .view label').text(entry);
             $('#todo-list li:last-child').attr('data-id', dataUUID);
-            $('#new-todo').val('');
+            
             var newlistitem = $('#todo-list li:last-child');
             //setupNewListeners(newlistitem);
             setListItemListeners(newlistitem);
+            saveToStorage(todoentry);
+            $('#new-todo').val('');
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
             
@@ -209,6 +218,21 @@ $(document).ready(function () {
         }
     };
     
+    function saveToStorage(todoentry) {
+        todoList = [];
+        if (localStorage.getItem('todoList') === null) {
+            todoList = [];
+        } else {
+            // Parse the serialized data back into an array of objects
+            todoList = JSON.parse(localStorage.getItem('todoList'));
+        }
+        // Push the new data (whether it be an object or anything else) onto the array
+	    todoList.push(todoentry);
+	    // Re-serialize the array back into a string and store it in localStorage
+	    localStorage.setItem('todoList', JSON.stringify(todoList));
+        
+    }
+    
     function setListItemListeners () {
          $('#todo-list li').on('dblclick', function (event) {
             //if double click on the list item then can edit it
@@ -235,7 +259,7 @@ $(document).ready(function () {
     
     function setListeners() {
         
-        $('#new-todo').keyup(function (event) {
+        $('#new-todo').on('keyup', function (event) {
             //13 is the enter key
             if (event.which === 13) {
                 var listentry = this.value;
@@ -291,7 +315,7 @@ $(document).ready(function () {
     };
     
     function setupEditListeners (listitem) {
-        listitem.find('.edit').keyup(function (event) {
+        listitem.find('.edit').on('keyup', function (event) {
              console.log("new keyup listener for editbox");
             if (event.which === 13) {
                 console.log("enter key was pressed");
