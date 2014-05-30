@@ -207,6 +207,7 @@ $(document).ready(function () {
         
         cancelEditListItem: function (event) {
             $(event.target).closest('li').removeClass('editing');
+			$('.edit').off('blur');
         },
         
         //clicked on chevron to cross everything off the list
