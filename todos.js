@@ -28,9 +28,6 @@ $(document).ready(function () {
     //check to see if we have items in local storage otherwise set up to save to local storage
     function loadFromLocalStorage() {
         
-      //  if(typeof(Storage)!=="undefined") {
-        //    console.log(Storage);
-        //}
         if (localStorage && localStorage.length > 0) {
 			// run LoadtheList to insert all the todo list items
             loadTheList();
@@ -164,7 +161,7 @@ $(document).ready(function () {
         deleteListItem: function (listitem) {
             var idnum = listitem.attr('data-id');
             removeFromStorage(idnum);
-            turnOffListeners(listitem);
+            listitem.off();// turn off the listeners
             listitem.remove();
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
@@ -282,7 +279,6 @@ $(document).ready(function () {
         });
         
         $('.toggle').on('click', function () {
-            console.log("Clicked on a checkmark");
             var currentlist = $(this).parent().parent();
             if (this.checked === true) {
                 listfunctions.completedListItem(currentlist, true);
@@ -357,14 +353,11 @@ $(document).ready(function () {
     
     function setupEditListeners(listitem) {
         listitem.find('.edit').on('keyup', function (event) {
-			if (event.which === 13) {
-				console.log("enter key was pressed");
+			if (event.which === 13) { //return key pressed
 				var listentry = this.value;
-				console.log(listentry);
 				listfunctions.completeEditListItem(event);
 
-			} else if (event.which === 27) {
-				console.log("Escape was clicked");
+			} else if (event.which === 27) { //escape key pressed
 				listfunctions.cancelEditListItem(event);
 			}
 		});
@@ -373,21 +366,16 @@ $(document).ready(function () {
             listfunctions.completeEditListItem(event);
         });
     }
-        
-    function turnOffListeners(listitem) {
-        //TODO turn off listeners here
-    }
     
     function deleteAllCompletedItems() {
-        console.log("deleteAllCompletedItems");
         var todoitems = $('#todo-list li');
         todoitems.each(function () {
             var checkmark = $(this).find('.toggle').prop('checked');
             if (checkmark === true) {
                 var idnum = $(this).attr('data-id');
                 removeFromStorage(idnum);
-                turnOffListeners(todoitems);
-                $(this).remove();
+                $(this).off();// turn off the listeners
+                $(this).remove();// remove element including on child nodes
                 listfunctions.updateListCount();
                 verifyClearCompletedDisplay();
             }
