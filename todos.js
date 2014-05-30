@@ -6,8 +6,7 @@ $(document).ready(function () {
     
     //get the list from local storage and insert the to do items
     function loadTheList() {
-        var allCompleted = true; //used to determine whether the chevron(.toggle-all) should be checked
-        var i = 0;
+        var allCompleted = true, i = 0; //used to determine whether the chevron(.toggle-all) should be checked
         todoList = JSON.parse(localStorage.getItem('todoList'));
         if (todoList.length > 0) {
             for (i = 0; i <= todoList.length - 1; i++) {
@@ -59,8 +58,7 @@ $(document).ready(function () {
     //generate unique id for each to do item
     function getUuid() {
         /*jshint bitwise:false */
-        var i, random;
-        var uuid = '';
+        var i, random, uuid = '';
 
         for (i = 0; i < 32; i++) {
             random = Math.random() * 16 | 0;
@@ -70,7 +68,7 @@ $(document).ready(function () {
             uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
         }
 
-        return uuid;	
+        return uuid;
 	}
     
     //check to see if the Clear Completed button needs to be displayed and
@@ -111,17 +109,18 @@ $(document).ready(function () {
     function removeFromStorage(idnum) {
         var i = 0;
         for (i = 0; i <  todoList.length; i++) {
-			if(todoList[i]['id'] == idnum){
-				todoList.splice(i,1);  //splice - remove 1 item from position i in the array
+			if (todoList[i]['id'] === idnum) {
+				todoList.splice(i, 1);  //splice - remove 1 item from position i in the array
 				localStorage.setItem('todoList', JSON.stringify(todoList));
             }
         }
     }
     
     function updateListTextStorage(idnum, newtext) {
-       // var idnum = $('.editing').attr('data-id');
-		for(i = 0; i <= todoList.length-1; i++) {
-			if(todoList[i]['id'] == idnum) {				
+		var i = 0;
+		// var idnum = $('.editing').attr('data-id');
+		for (i = 0; i <= todoList.length - 1; i++) {
+			if (todoList[i]['id'] === idnum) {
 				todoList[i]['todotext'] = newtext;
 			}
 		}
@@ -129,19 +128,19 @@ $(document).ready(function () {
     }
     
     function updateCompletedStorage(idnum, checked) {
-        for(i = 0; i <= todoList.length-1; i++) {
-			if(todoList[i]['id'] == idnum) {				
+        var i = 0;
+		for (i = 0; i <= todoList.length - 1; i++) {
+			if (todoList[i]['id'] === idnum) {
 				todoList[i]['completed'] = checked;
 			}
 			localStorage.setItem('todoList', JSON.stringify(todoList));
-		}	
+		}
     }
     
     var listfunctions = {
         
         addtoList: function (todoitem) {
-            var entry = todoitem;
-            var dataUUID = getUuid();
+            var entry = todoitem, dataUUID = getUuid(), newlistitem;
             var todoentry = {
                 'id': dataUUID,
                 'todotext': entry,
@@ -152,7 +151,7 @@ $(document).ready(function () {
             $('#todo-list li:last-child .view label').text(entry);
             $('#todo-list li:last-child').attr('data-id', dataUUID);
             
-            var newlistitem = $('#todo-list li:last-child');
+            newlistitem = $('#todo-list li:last-child');
             //setupNewListeners(newlistitem);
             setListItemListeners(newlistitem);
             saveToStorage(todoentry);
@@ -164,7 +163,7 @@ $(document).ready(function () {
         
         deleteListItem: function (listitem) {
             var idnum = listitem.attr('data-id');
-            removeFromStorage(idnum); 
+            removeFromStorage(idnum);
             turnOffListeners(listitem);
             listitem.remove();
             listfunctions.updateListCount();
@@ -212,6 +211,7 @@ $(document).ready(function () {
         
         //clicked on chevron to cross everything off the list
         markAllCompleted: function (checked) {
+			var i = 0;
             if (checked === true) {
                 $('.completed').removeClass('completed');
                 $('#todo-list li').addClass('completed');
@@ -223,7 +223,7 @@ $(document).ready(function () {
                 
             }
             
-            for(var i = 0; i <= todoList.length-1; i++) {
+            for (i = 0; i <= todoList.length - 1; i++) {
 				todoList[i]['completed'] = true;
 			}
             
@@ -352,29 +352,25 @@ $(document).ready(function () {
         $('#clear-completed').on('click', function () {
             deleteAllCompletedItems();
         });
-        
-    };
+	};
     
     function setupEditListeners(listitem) {
         listitem.find('.edit').on('keyup', function (event) {
-             console.log("new keyup listener for editbox");
-            if (event.which === 13) {
-                console.log("enter key was pressed");
-                var listentry = this.value;
-                console.log(listentry);
-                listfunctions.completeEditListItem(event);
-                
-            } else if (event.which === 27) {
-                console.log("Escape was clicked");
-                listfunctions.cancelEditListItem(event);
-            }
-        });
+			if (event.which === 13) {
+				console.log("enter key was pressed");
+				var listentry = this.value;
+				console.log(listentry);
+				listfunctions.completeEditListItem(event);
+
+			} else if (event.which === 27) {
+				console.log("Escape was clicked");
+				listfunctions.cancelEditListItem(event);
+			}
+		});
         
         listitem.find('.edit').on('blur', function (event) {
             listfunctions.completeEditListItem(event);
         });
-        
-        
     }
         
     function turnOffListeners(listitem) {
