@@ -114,7 +114,7 @@ $(document).ready(function () {
     
     function removeFromStorage(idnum) {
         var i = 0;
-        for (i = 0; i <  todoList.length; i++) {
+        for (i = 0; i < todoList.length; i++) {
 			if(todoList[i]['id'] == idnum){
 				todoList.splice(i,1);  //splice - remove 1 item from position i in the array
 				localStorage.setItem('todoList', JSON.stringify(todoList));
@@ -123,7 +123,6 @@ $(document).ready(function () {
     }
     
     function updateListTextStorage(idnum, newtext) {
-       // var idnum = $('.editing').attr('data-id');
 		for(i = 0; i <= todoList.length-1; i++) {
 			if(todoList[i]['id'] == idnum) {				
 				todoList[i]['todotext'] = newtext;
