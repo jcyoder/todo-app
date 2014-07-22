@@ -12,6 +12,7 @@ $(document).ready(function () {
         if (todoList.length > 0) {
             for (i = 0; i <= todoList.length - 1; i++) {
 				// insert the todo into the html list.
+                console.log("todoList completed is: " + todoList[i]['completed']);
 				insertEntry(todoList[i]['todotext'], todoList[i]['id'], todoList[i]['completed']);
                 if (todoList[i]['completed'] === false) {
 					allCompleted = false;
@@ -215,16 +216,18 @@ $(document).ready(function () {
                 $('.completed').removeClass('completed');
                 $('#todo-list li').addClass('completed');
                 $('.toggle').prop('checked', true);
+                for(var i = 0; i <= todoList.length-1; i++) {
+				    todoList[i]['completed'] = true;
+                }
                 
             } else {
                 $('.completed').removeClass('completed');
                 $('.toggle').prop('checked', false);
+                for(var i = 0; i <= todoList.length-1; i++) {
+				    todoList[i]['completed'] = false;
+                }
                 
             }
-            
-            for(var i = 0; i <= todoList.length-1; i++) {
-				todoList[i]['completed'] = true;
-			}
             
             localStorage.setItem('todoList', JSON.stringify(todoList));
             listfunctions.updateListCount();
