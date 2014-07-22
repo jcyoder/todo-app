@@ -45,18 +45,14 @@ $(document).ready(function () {
     
     function insertEntry(todotext, id, completedstatus) {
         $('.template li').clone().appendTo('#todo-list');
-        var lientry = $('#todo-list li:last-child');
-        
-        lientry.find('label').text(todotext);
-        lientry.attr('data-id', id);
-        
+		$('#todo-list li:last-child label').text(todotext);
+		$('#todo-list li:last-child').attr('data-id', id);
 		if (completedstatus) {
-            lientry.addClass('completed');
-            lientry.find('.toggle').attr('checked', true);
-		
+			$('#todo-list li:last-child').addClass('completed');
+			$('#todo-list li:last-child .toggle').attr('checked', true);
 		}
 		$('#new-todo').val('');
-        var newlistitem = lientry;
+        var newlistitem = $('#todo-list li:last-child');
 		setListItemListeners(newlistitem);
     }
     
