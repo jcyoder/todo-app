@@ -6,11 +6,13 @@ $(document).ready(function () {
     
     //get the list from local storage and insert the to do items
     function loadTheList() {
-        var allCompleted = true, i = 0; //used to determine whether the chevron(.toggle-all) should be checked
+        var allCompleted = true; //used to determine whether the chevron(.toggle-all) should be checked
+        var i = 0;
         todoList = JSON.parse(localStorage.getItem('todoList'));
         if (todoList.length > 0) {
             for (i = 0; i <= todoList.length - 1; i++) {
 				// insert the todo into the html list.
+                console.log("todoList completed is: " + todoList[i]['completed']);
 				insertEntry(todoList[i]['todotext'], todoList[i]['id'], todoList[i]['completed']);
                 if (todoList[i]['completed'] === false) {
 					allCompleted = false;
@@ -40,22 +42,25 @@ $(document).ready(function () {
     }
     
     function insertEntry(todotext, id, completedstatus) {
+        
         $('.template li').clone().appendTo('#todo-list');
-		$('#todo-list li:last-child label').text(todotext);
-		$('#todo-list li:last-child').attr('data-id', id);
+		var listli = $('#todo-list li:last-child');
+        $('#todo-list li:last-child label').text(todotext);
+		listli.attr('data-id', id);
 		if (completedstatus) {
-			$('#todo-list li:last-child').addClass('completed');
+            listli.addClass('completed');
 			$('#todo-list li:last-child .toggle').attr('checked', true);
 		}
 		$('#new-todo').val('');
-        var newlistitem = $('#todo-list li:last-child');
+        var newlistitem = listli;
 		setListItemListeners(newlistitem);
     }
     
     //generate unique id for each to do item
     function getUuid() {
         /*jshint bitwise:false */
-        var i, random, uuid = '';
+        var i, random;
+        var uuid = '';
 
         for (i = 0; i < 32; i++) {
             random = Math.random() * 16 | 0;
@@ -65,7 +70,7 @@ $(document).ready(function () {
             uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
         }
 
-        return uuid;
+        return uuid;	
 	}
     
     //check to see if the Clear Completed button needs to be displayed and
@@ -105,19 +110,17 @@ $(document).ready(function () {
     
     function removeFromStorage(idnum) {
         var i = 0;
-        for (i = 0; i <  todoList.length; i++) {
-			if (todoList[i]['id'] === idnum) {
-				todoList.splice(i, 1);  //splice - remove 1 item from position i in the array
+        for (i = 0; i < todoList.length; i++) {
+			if(todoList[i]['id'] == idnum){
+				todoList.splice(i,1);  //splice - remove 1 item from position i in the array
 				localStorage.setItem('todoList', JSON.stringify(todoList));
             }
         }
     }
     
     function updateListTextStorage(idnum, newtext) {
-		var i = 0;
-		// var idnum = $('.editing').attr('data-id');
-		for (i = 0; i <= todoList.length - 1; i++) {
-			if (todoList[i]['id'] === idnum) {
+		for(i = 0; i <= todoList.length-1; i++) {
+			if(todoList[i]['id'] == idnum) {				
 				todoList[i]['todotext'] = newtext;
 			}
 		}
@@ -125,31 +128,31 @@ $(document).ready(function () {
     }
     
     function updateCompletedStorage(idnum, checked) {
-        var i = 0;
-		for (i = 0; i <= todoList.length - 1; i++) {
-			if (todoList[i]['id'] === idnum) {
+        for(i = 0; i <= todoList.length-1; i++) {
+			if(todoList[i]['id'] == idnum) {				
 				todoList[i]['completed'] = checked;
 			}
 			localStorage.setItem('todoList', JSON.stringify(todoList));
-		}
+		}	
     }
     
     var listfunctions = {
         
         addtoList: function (todoitem) {
-            var entry = todoitem, dataUUID = getUuid(), newlistitem;
+            var entry = todoitem;
+            var dataUUID = getUuid();
             var todoentry = {
                 'id': dataUUID,
                 'todotext': entry,
                 'completed': false
             };
-            
+            var lastliitem = $('#todo-list li:last-child');
             $('.template li').clone().appendTo('#todo-list');
             $('#todo-list li:last-child .view label').text(entry);
-            $('#todo-list li:last-child').attr('data-id', dataUUID);
+            lastliitem.attr('data-id', dataUUID);
             
-            newlistitem = $('#todo-list li:last-child');
-            //setupNewListeners(newlistitem);
+            var newlistitem = lastliitem;
+            
             setListItemListeners(newlistitem);
             saveToStorage(todoentry);
             $('#new-todo').val('');
@@ -160,8 +163,8 @@ $(document).ready(function () {
         
         deleteListItem: function (listitem) {
             var idnum = listitem.attr('data-id');
-            removeFromStorage(idnum);
-            listitem.off();// turn off the listeners
+            removeFromStorage(idnum); 
+            turnOffListeners(listitem);
             listitem.remove();
             listfunctions.updateListCount();
             verifyClearCompletedDisplay();
@@ -204,26 +207,26 @@ $(document).ready(function () {
         
         cancelEditListItem: function (event) {
             $(event.target).closest('li').removeClass('editing');
-			$('.edit').off('blur');
         },
         
         //clicked on chevron to cross everything off the list
         markAllCompleted: function (checked) {
-			var i = 0;
             if (checked === true) {
                 $('.completed').removeClass('completed');
                 $('#todo-list li').addClass('completed');
                 $('.toggle').prop('checked', true);
+                for(var i = 0; i <= todoList.length-1; i++) {
+				    todoList[i]['completed'] = true;
+                }
                 
             } else {
                 $('.completed').removeClass('completed');
                 $('.toggle').prop('checked', false);
+                for(var i = 0; i <= todoList.length-1; i++) {
+				    todoList[i]['completed'] = false;
+                }
                 
             }
-            
-            for (i = 0; i <= todoList.length - 1; i++) {
-				todoList[i]['completed'] = true;
-			}
             
             localStorage.setItem('todoList', JSON.stringify(todoList));
             listfunctions.updateListCount();
@@ -279,6 +282,7 @@ $(document).ready(function () {
         });
         
         $('.toggle').on('click', function () {
+            console.log("Clicked on a checkmark");
             var currentlist = $(this).parent().parent();
             if (this.checked === true) {
                 listfunctions.completedListItem(currentlist, true);
@@ -349,33 +353,45 @@ $(document).ready(function () {
         $('#clear-completed').on('click', function () {
             deleteAllCompletedItems();
         });
-	};
+        
+    };
     
     function setupEditListeners(listitem) {
         listitem.find('.edit').on('keyup', function (event) {
-			if (event.which === 13) { //return key pressed
-				var listentry = this.value;
-				listfunctions.completeEditListItem(event);
-
-			} else if (event.which === 27) { //escape key pressed
-				listfunctions.cancelEditListItem(event);
-			}
-		});
+             console.log("new keyup listener for editbox");
+            if (event.which === 13) {
+                console.log("enter key was pressed");
+                var listentry = this.value;
+                console.log(listentry);
+                listfunctions.completeEditListItem(event);
+                
+            } else if (event.which === 27) {
+                console.log("Escape was clicked");
+                listfunctions.cancelEditListItem(event);
+            }
+        });
         
         listitem.find('.edit').on('blur', function (event) {
             listfunctions.completeEditListItem(event);
         });
+        
+        
+    }
+        
+    function turnOffListeners(listitem) {
+        //TODO turn off listeners here
     }
     
     function deleteAllCompletedItems() {
+        console.log("deleteAllCompletedItems");
         var todoitems = $('#todo-list li');
         todoitems.each(function () {
             var checkmark = $(this).find('.toggle').prop('checked');
             if (checkmark === true) {
                 var idnum = $(this).attr('data-id');
                 removeFromStorage(idnum);
-                $(this).off();// turn off the listeners
-                $(this).remove();// remove element including on child nodes
+                turnOffListeners(todoitems);
+                $(this).remove();
                 listfunctions.updateListCount();
                 verifyClearCompletedDisplay();
             }
