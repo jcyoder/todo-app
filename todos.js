@@ -30,9 +30,6 @@ $(document).ready(function () {
     //check to see if we have items in local storage otherwise set up to save to local storage
     function loadFromLocalStorage() {
         
-      //  if(typeof(Storage)!=="undefined") {
-        //    console.log(Storage);
-        //}
         if (localStorage && localStorage.length > 0) {
 			// run LoadtheList to insert all the todo list items
             loadTheList();
@@ -45,15 +42,17 @@ $(document).ready(function () {
     }
     
     function insertEntry(todotext, id, completedstatus) {
+        
         $('.template li').clone().appendTo('#todo-list');
-		$('#todo-list li:last-child label').text(todotext);
-		$('#todo-list li:last-child').attr('data-id', id);
+		var listli = $('#todo-list li:last-child');
+        $('#todo-list li:last-child label').text(todotext);
+		listli.attr('data-id', id);
 		if (completedstatus) {
-			$('#todo-list li:last-child').addClass('completed');
+            listli.addClass('completed');
 			$('#todo-list li:last-child .toggle').attr('checked', true);
 		}
 		$('#new-todo').val('');
-        var newlistitem = $('#todo-list li:last-child');
+        var newlistitem = listli;
 		setListItemListeners(newlistitem);
     }
     
