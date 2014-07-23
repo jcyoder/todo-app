@@ -146,13 +146,13 @@ $(document).ready(function () {
                 'todotext': entry,
                 'completed': false
             };
-            
+            var lastliitem = $('#todo-list li:last-child');
             $('.template li').clone().appendTo('#todo-list');
             $('#todo-list li:last-child .view label').text(entry);
-            $('#todo-list li:last-child').attr('data-id', dataUUID);
+            lastliitem.attr('data-id', dataUUID);
             
-            var newlistitem = $('#todo-list li:last-child');
-            //setupNewListeners(newlistitem);
+            var newlistitem = lastliitem;
+            
             setListItemListeners(newlistitem);
             saveToStorage(todoentry);
             $('#new-todo').val('');
